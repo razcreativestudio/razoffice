@@ -38,7 +38,7 @@ export const RAZ_CONFIG = {
   /** Penulis & Organisasi */
   author: "RAZ Enterprise",
   /** Repositori GitHub resmi */
-  githubUrl: "https://github.com/baotlake/office-website",
+  githubUrl: "https://github.com/razcreativestudio/razoffice",
   /** Lisensi resmi */
   license: "AGPL v3",
 } as const;

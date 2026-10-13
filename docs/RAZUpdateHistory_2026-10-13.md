@@ -47,7 +47,7 @@
    - `messages/id.json` & `messages/en.json`: Mengganti seluruh kemunculan string penamaan lama menjadi RAZ Office.
 
 6. **Optimasi Dependensi Package:**
-   - Memperbarui `package.json` (`name: "raz-office"`, `version: "0.1.1"`).
+   - Memperbarui `package.json` (`name: "razoffice"`, `version: "0.1.1"`).
    - Menambahkan konfigurasi `pnpm.onlyBuiltDependencies` untuk `@parcel/watcher`, `@swc/core`, `sharp`, dan `unrs-resolver` sehingga proses build berjalan bersih 100% tanpa warning.
 
 7. **Verifikasi Operasional & Kualitas Build:**
@@ -58,3 +58,7 @@
      - `/about` &rarr; 200 OK
      - `/settings` &rarr; 200 OK
      - `/editor` &rarr; 200 OK
+
+8. **Pembaruan Nama & URL Repositori Git Resmi:**
+   - Memperbarui Git Remote Origin dari `baotlake/office-website` ke `https://github.com/razcreativestudio/razoffice.git`.
+   - Menyelaraskan seluruh tautan repositori pada `lib/RAZBranding.ts`, `components/main/about-view.tsx`, `package.json` (`name: "razoffice"`), dan `README.md`.

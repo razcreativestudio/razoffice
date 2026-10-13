@@ -1,5 +1,5 @@
 {
-  "name": "raz-office",
+  "name": "razoffice",
   "version": "0.1.1",
   "private": true,
   "scripts": {
@@ -9,8 +9,8 @@
     "lint": "eslint",
     "svgr": "npx @svgr/cli --out-dir components/svg --typescript -- public/svg",
     "pages:dev": "npx wrangler pages dev ./out",
-    "deploy": "pnpm build && npx wrangler pages deploy ./out --project-name=raz-office",
-    "deploy:preview": "pnpm build && npx wrangler pages deploy ./out --project-name=raz-office --branch=preview"
+    "deploy": "pnpm build && npx wrangler pages deploy ./out --project-name=razoffice",
+    "deploy:preview": "pnpm build && npx wrangler pages deploy ./out --project-name=razoffice --branch=preview"
   },
   "dependencies": {
     "@bprogress/next": "^3.2.12",

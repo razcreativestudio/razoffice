@@ -66,12 +66,18 @@ Seluruh dokumentasi teknis dan arsitektur tersimpan di folder `docs/`:
 - Node.js versi 20 atau lebih baru (direkomendasikan Node.js v25)
 - pnpm (v9+ atau v12+)
 
-### 2. Instalasi Dependensi
+### 2. Kloning Repositori
 ```bash
-pnpm install --dangerously-allow-all-builds
+git clone https://github.com/razcreativestudio/razoffice.git
+cd razoffice
 ```
 
-### 3. Menjalankan Server Pengembangan
+### 3. Instalasi Dependensi
+```bash
+pnpm install
+```
+
+### 4. Menjalankan Server Pengembangan
 ```bash
 pnpm run dev
 ```
