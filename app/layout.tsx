@@ -1,49 +1,46 @@
+/**
+ * Layout: Root Layout Aplikasi
+ * Lokasi: app/layout.tsx
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Layout utama Next.js untuk RAZ Office. Mengatur metadata SEO global,
+ * skema WebApplication Schema.org, script inisialisasi tema instan (tanpa flicker),
+ * serta provider konteks multi-bahasa dan progress bar.
+ */
+
 import type { Metadata } from "next";
-import { GoogleAnalytics } from '@next/third-parties/google'
 import { getMessages } from "next-intl/server";
 import { I18nProvider } from "@/components/i18n-provider";
 import { ProgressProvider } from "@/components/progress-provider";
+import { RAZ_CONFIG } from "@/lib/RAZBranding";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://office.ziziyi.com"),
+  metadataBase: new URL(RAZ_CONFIG.siteUrl),
   title: {
-    default: "ZIZIYI Office — Free Online Word, Excel & PowerPoint Editor",
-    template: "%s",
+    default: `${RAZ_CONFIG.appName} — Suite Editor Dokumen Web (Word, Excel & PowerPoint)`,
+    template: `%s — ${RAZ_CONFIG.appName}`,
   },
-  description:
-    "Free online office suite. Open, view, and edit Word, Excel, and PowerPoint documents directly in your browser. No upload, no login — your files stay private.",
-  keywords: [
-    "web office",
-    "online office suite",
-    "Word online",
-    "Excel online",
-    "PowerPoint online",
-    "DOCX viewer",
-    "DOCX editor",
-    "XLSX editor",
-    "PPTX editor",
-    "open docx online",
-    "edit excel online",
-    "serverless office",
-    "privacy first",
-    "ZIZIYI",
-  ],
+  description: RAZ_CONFIG.description,
+  keywords: [...RAZ_CONFIG.keywords],
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
       { url: "/logo.svg", type: "image/svg+xml" },
     ],
-    apple: "/logo.png",
+    apple: "/logo.svg",
   },
   openGraph: {
-    siteName: "ZIZIYI Office",
+    siteName: RAZ_CONFIG.appName,
+    title: `${RAZ_CONFIG.appName} — Suite Perkantoran Web Modern & Privat`,
+    description: RAZ_CONFIG.description,
     type: "website",
-    locale: "en_US",
+    locale: "id_ID",
   },
   twitter: {
     card: "summary_large_image",
-    creator: "@nicezizi",
+    title: RAZ_CONFIG.appName,
+    description: RAZ_CONFIG.description,
   },
   robots: {
     index: true,
@@ -52,7 +49,7 @@ export const metadata: Metadata = {
   other: {
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-capable": "yes",
-    "apple-mobile-web-app-title": "ZIZIYI Office",
+    "apple-mobile-web-app-title": RAZ_CONFIG.appName,
   },
 };
 
@@ -63,20 +60,21 @@ export default async function RootLayout({
 }>) {
   const messages = await getMessages();
 
+  // Script inisialisasi tema sebelum rendering DOM untuk mencegah efek flash
   const preload = () => {
     const theme = document.cookie.match(/theme=([^;]+)/)?.[1] || "";
     const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = theme == "dark" || (dark && theme != "light");
+    const isDark = theme === "dark" || (dark && theme !== "light");
     document.documentElement.classList.toggle("dark", isDark);
   };
 
+  // Structured Data (JSON-LD) untuk mesin pencari
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "ZIZIYI Office",
-    url: "https://office.ziziyi.com",
-    description:
-      "Open, view, and edit Word, Excel, and PowerPoint documents directly in your browser. No upload, no server — your files stay private.",
+    name: RAZ_CONFIG.appName,
+    url: RAZ_CONFIG.siteUrl,
+    description: RAZ_CONFIG.description,
     applicationCategory: "BusinessApplication",
     operatingSystem: "Any",
     offers: {
@@ -85,29 +83,28 @@ export default async function RootLayout({
       priceCurrency: "USD",
     },
     featureList: [
-      "Edit DOCX, XLSX, PPTX files",
-      "No file upload required",
-      "Privacy-first — files stay local",
-      "Free templates",
-      "Browser extension for drag & drop",
+      "Sunting berkas DOCX, XLSX, PPTX secara instan",
+      "Pemrosesan lokal di browser tanpa unggah ke server",
+      "Privasi penuh dan keamanan data tingkat tinggi",
+      "Katalog templat profesional siap pakai",
+      "Integrasi penyimpanan lokal IndexedDB",
     ],
   };
 
   return (
-    <html suppressHydrationWarning>
+    <html suppressHydrationWarning lang="id">
       <head>
-        <script>{`(${preload.toString()})()`}</script>
+        <script dangerouslySetInnerHTML={{ __html: `(${preload.toString()})()` }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>
+      <body className="antialiased selection:bg-primary/20 selection:text-primary">
         <ProgressProvider>
           <I18nProvider initialMessages={messages}>{children}</I18nProvider>
         </ProgressProvider>
       </body>
-      <GoogleAnalytics gaId="G-EFLBPT6TS8" />
     </html>
   );
 }

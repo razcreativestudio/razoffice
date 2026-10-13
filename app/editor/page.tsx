@@ -1,3 +1,12 @@
+/**
+ * Halaman: Engine Editor Dokumen (Virtual ONLYOFFICE Bridge)
+ * Lokasi: app/editor/page.tsx
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Halaman inti penyunting dokumen RAZ Office. Menginisialisasi iframe editor
+ * ONLYOFFICE Web-Apps dan menghubungkannya dengan EditorServer virtual berbasis WebAssembly (x2t).
+ */
+
 "use client";
 
 import { useLayoutEffect, useRef, useEffect, useState } from "react";

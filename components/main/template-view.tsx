@@ -1,3 +1,12 @@
+/**
+ * Komponen: Galeri Templat Dokumen (TemplateView)
+ * Lokasi: components/main/template-view.tsx
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Antarmuka katalog templat siap pakai (Word, Excel, PowerPoint)
+ * yang dapat langsung dibuka dan disunting di RAZ Office tanpa instalasi software luar.
+ */
+
 "use client";
 
 import { useState } from "react";
@@ -17,6 +26,7 @@ import { useAppStore } from "@/store";
 
 import type { Template } from "@/utils/templates";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { RAZ_CONFIG } from "@/lib/RAZBranding";
 
 export function TemplateView({
   initialTemplates,
@@ -24,7 +34,7 @@ export function TemplateView({
   initialTemplates: Template[];
 }) {
   const t = useExtracted();
-  usePageTitle(t("Free Office Templates — Word, Excel & PowerPoint | ZIZIYI Office"));
+  usePageTitle(`Templat Dokumen — ${RAZ_CONFIG.appName}`);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeType, setActiveType] = useState("All");
   const [activeCategory, setActiveCategory] = useState("All");

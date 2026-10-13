@@ -1,3 +1,12 @@
+/**
+ * Komponen: Halaman Pengaturan (SettingsView)
+ * Lokasi: components/main/settings-view.tsx
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Panel pengaturan preferensi pengguna untuk bahasa antarmuka,
+ * tema editor ONLYOFFICE, dan konfigurasi plugin tambahan.
+ */
+
 "use client";
 
 import { useAppStore } from "@/store";
@@ -24,6 +33,7 @@ import {
 import { OfficeTheme } from "@/utils/editor/types";
 import { isDarkTheme } from "@/utils/utils";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { RAZ_CONFIG } from "@/lib/RAZBranding";
 
 // Get display name for a language code
 function getLanguageLabel(code: Language): string {
@@ -43,7 +53,7 @@ const sortedLanguages = [
 
 export function SettingsView() {
   const t = useExtracted();
-  usePageTitle(t("Settings — ZIZIYI Office"));
+  usePageTitle(`Pengaturan — ${RAZ_CONFIG.appName}`);
   const { language, theme, plugins, setState } = useAppStore();
 
   const themes: {

@@ -1,94 +1,99 @@
+/**
+ * Komponen: Halaman Tentang (AboutView)
+ * Lokasi: components/main/about-view.tsx
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Halaman informasi resmi mengenai RAZ Office, arsitektur local-first,
+ * kepatuhan lisensi open-source OnlyOffice (AGPL v3), dan komitmen privasi pengguna.
+ */
+
 "use client";
 
-import { Github, Info, ShieldCheck, Heart } from "lucide-react";
+import { Github, ShieldCheck, Heart, Sparkles, Lock, Cpu } from "lucide-react";
 import { useExtracted } from "next-intl";
 import { usePageTitle } from "@/hooks/use-page-title";
-import { useAppStore } from "@/store";
-import { isDarkTheme } from "@/utils/utils";
 import { Logo } from "../svg";
+import { RAZ_CONFIG } from "@/lib/RAZBranding";
 
 export function AboutView() {
   const t = useExtracted();
-  usePageTitle(t("About — ZIZIYI Office"));
-  const { theme } = useAppStore();
-  const isDark = isDarkTheme(theme);
+  usePageTitle(`Tentang — ${RAZ_CONFIG.appName}`);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 py-4">
+      {/* Hero Bagian Atas */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-primary/10 rounded-3xl mb-4">
-          <Logo className="w-12 h-12" />
+        <div className="inline-flex items-center justify-center w-24 h-24 bg-primary/10 rounded-3xl mb-2 shadow-lg shadow-primary/10">
+          <Logo className="w-16 h-16" />
         </div>
-        <h1 className="text-4xl font-extrabold tracking-tight">
-          {"ZIZIYI OFFICE"}
+        <h1 className="text-4xl font-extrabold tracking-tight uppercase bg-linear-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          {RAZ_CONFIG.appName}
         </h1>
-        <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-          {t(
-            "A modern, high-performance web-based office suite designed for the future of productivity.",
-          )}
+        <p className="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+          {RAZ_CONFIG.description}
         </p>
 
-        <div className="pt-6 flex justify-center">
-          <a
-            href="https://www.producthunt.com/products/serverless-web-office-by-ziziyi?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-serverless-web-office-by-ziziyi"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              alt="Serverless Web Office by ZIZIYI - Serverless Web Office: Private, In-Browser editing via WASM. | Product Hunt"
-              width="250"
-              height="54"
-              src={`https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1067951&theme=${
-                isDark ? "dark" : "light"
-              }&t=1769359248898`}
-            />
-          </a>
+        {/* Badge Keunggulan Sistem */}
+        <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <Lock className="w-3.5 h-3.5" /> 100% Local-First & Privat
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+            <Cpu className="w-3.5 h-3.5" /> WebAssembly x2t Engine
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+            <Sparkles className="w-3.5 h-3.5" /> Standar RAZ Enterprise
+          </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-        <div className="p-8 bg-white/5 dark:bg-white/5 border border-border dark:border-white/10 rounded-3xl hover:border-primary/50 dark:hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all group">
+      {/* Grid Informasi Fitur & Lisensi */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+        {/* Kolom Open Source */}
+        <div className="p-8 bg-card border border-border rounded-3xl hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
           <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-2xl flex items-center justify-center mb-6">
             <Github className="w-6 h-6 text-primary" />
           </div>
           <h3 className="text-xl font-bold mb-3">{t("Open Source")}</h3>
-          <p className="text-text-secondary dark:text-slate-400 text-sm leading-relaxed mb-6">
+          <p className="text-text-secondary text-sm leading-relaxed mb-6">
             {t(
-              "We believe in the power of community. The source code for this project is available on GitHub for everyone to view, contribute, and improve.",
+              "Kami percaya pada kekuatan komunitas. Kode sumber untuk proyek ini tersedia di GitHub untuk dilihat, dikontribusikan, dan ditingkatkan oleh semua orang.",
             )}
           </p>
           <a
-            href="https://github.com/baotlake/office-website"
+            href={RAZ_CONFIG.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center text-sm font-semibold text-primary hover:underline"
           >
-            {t("View on GitHub")}
+            {t("Lihat di GitHub")} &rarr;
           </a>
         </div>
 
-        <div className="p-8 bg-white/5 dark:bg-white/5 border border-border dark:border-white/10 rounded-3xl hover:border-primary/50 dark:hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all group">
+        {/* Kolom Didukung OnlyOffice */}
+        <div className="p-8 bg-card border border-border rounded-3xl hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all group">
           <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-2xl flex items-center justify-center mb-6">
             <ShieldCheck className="w-6 h-6 text-primary" />
           </div>
           <h3 className="text-xl font-bold mb-3">
-            {t("Powered by OnlyOffice")}
+            {t("Didukung oleh OnlyOffice")}
           </h3>
-          <p className="text-text-secondary dark:text-slate-400 text-sm leading-relaxed">
+          <p className="text-text-secondary text-sm leading-relaxed">
             {t(
-              "This project is built upon the robust foundation of OnlyOffice open-source code. We strictly adhere to and support OnlyOffice's open-source license, ensuring a sustainable ecosystem for document processing.",
+              "Proyek ini dibangun di atas fondasi kuat kode sumber terbuka OnlyOffice. Kami mematuhi dan mendukung lisensi sumber terbuka OnlyOffice secara ketat, memastikan ekosistem yang berkelanjutan untuk pemrosesan dokumen.",
             )}
           </p>
         </div>
       </div>
 
-      <div className="p-10 bg-linear-to-br from-primary/10 to-orange-500/10 dark:from-primary/15 dark:to-orange-500/5 border border-primary/20 dark:border-primary/30 rounded-3xl text-center space-y-6 shadow-lg shadow-primary/5">
-        <Heart className="w-8 h-8 text-red-500 dark:text-red-400 mx-auto fill-red-500 dark:fill-red-400 animate-pulse" />
+      {/* Kartu Komitmen */}
+      <div className="p-10 bg-linear-to-br from-primary/10 via-background to-orange-500/10 border border-primary/20 rounded-3xl text-center space-y-4 shadow-lg shadow-primary/5">
+        <Heart className="w-8 h-8 text-red-500 mx-auto fill-red-500 animate-pulse" />
         <div className="space-y-2">
-          <h3 className="text-2xl font-bold">{t("Our Commitment")}</h3>
-          <p className="text-text-secondary dark:text-slate-400 text-sm max-w-xl mx-auto leading-relaxed">
+          <h3 className="text-2xl font-bold">{t("Komitmen Kami")}</h3>
+          <p className="text-text-secondary text-sm max-w-xl mx-auto leading-relaxed">
             {t(
-              "Our goal is to provide a seamless, local-first office experience while maintaining the highest standards of compatibility and open-source compliance.",
+              "Tujuan kami adalah memberikan pengalaman kantor yang mulus dan mengutamakan lokal sambil mempertahankan standar kompatibilitas dan kepatuhan sumber terbuka tertinggi.",
             )}
           </p>
         </div>

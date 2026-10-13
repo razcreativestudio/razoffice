@@ -1,13 +1,21 @@
+/**
+ * Halaman: Tentang RAZ Office
+ * Lokasi: app/(main)/about/page.tsx
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Halaman deskripsi arsitektur, dedikasi sumber terbuka, dan komitmen privasi RAZ Office.
+ */
+
 import type { Metadata } from "next";
 import { AboutView } from "@/components/main/about-view";
+import { RAZ_CONFIG } from "@/lib/RAZBranding";
 
 export const metadata: Metadata = {
-  title: "About — ZIZIYI Office",
-  description:
-    "ZIZIYI Office is a serverless, privacy-first office suite powered by OnlyOffice. Edit documents entirely in your browser — no data ever leaves your device.",
+  title: `Tentang — ${RAZ_CONFIG.appName}`,
+  description: `${RAZ_CONFIG.appName} adalah suite perkantoran berbasis web berstandar enterprise yang mengutamakan privasi pengguna dengan pemrosesan dokumen 100% lokal di browser.`,
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
   },
 };
 

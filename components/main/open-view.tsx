@@ -1,3 +1,13 @@
+/**
+ * Komponen: Halaman Beranda / Pembuka File (OpenView)
+ * Lokasi: components/main/open-view.tsx
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Halaman beranda utama RAZ Office untuk drag-and-drop file dokumen,
+ * pemilihan file lokal/cloud, akses templat cepat, serta daftar berkas riwayat (IndexedDB).
+ * Menggunakan dialog modal kustom RAZModal untuk konfirmasi penghapusan riwayat file.
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,6 +24,8 @@ import { getDocConfig } from "@/lib/document-types";
 import type { Template } from "@/utils/templates";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { useAppStore } from "@/store";
+import { RAZModal } from "@/components/ui/RAZModal";
+import { RAZ_CONFIG } from "@/lib/RAZBranding";
 import {
   getRecentFiles,
   openRecentFile,
@@ -29,10 +41,10 @@ export function OpenView({
   recommendedTemplates: Template[];
 }) {
   const t = useExtracted();
-  usePageTitle(
-    t("Free Online Office Editor — Word, Excel, PowerPoint | ZIZIYI"),
-  );
+  usePageTitle(`${RAZ_CONFIG.appName} — Suite Editor Dokumen Web (Word, Excel, PowerPoint)`);
   const [recentFiles, setRecentFiles] = useState<RecentFileRecord[]>([]);
+  const [fileToDelete, setFileToDelete] = useState<RecentFileRecord | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingTemplate, setLoadingTemplate] = useState<string | null>(null);
 
@@ -85,13 +97,24 @@ export function OpenView({
     }
   };
 
-  const handleRemoveRecentFile = async (e: React.MouseEvent, id: string) => {
+  // Membuka modal dialog konfirmasi penghapusan dokumen dari riwayat
+  const handlePromptRemoveRecentFile = (e: React.MouseEvent, file: RecentFileRecord) => {
     e.stopPropagation();
+    setFileToDelete(file);
+  };
+
+  // Menjalankan proses penghapusan setelah pengguna mengonfirmasi lewat RAZModal
+  const handleConfirmRemoveRecentFile = async () => {
+    if (!fileToDelete) return;
+    setIsDeleting(true);
     try {
-      await removeRecentFile(id);
+      await removeRecentFile(fileToDelete.path);
       await loadRecentFiles();
+      setFileToDelete(null);
     } catch (error) {
-      console.error("Failed to remove recent file:", error);
+      console.error("Gagal menghapus file dari riwayat:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -269,17 +292,30 @@ export function OpenView({
                   </div>
                 </div>
                 <button
-                  onClick={(e) => handleRemoveRecentFile(e, file.path)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-border/50 rounded"
+                  onClick={(e) => handlePromptRemoveRecentFile(e, file)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-destructive/10 hover:text-destructive rounded-lg cursor-pointer"
                   title={t("Remove from recent")}
                 >
-                  <X className="w-4 h-4 text-text-secondary" />
+                  <X className="w-4 h-4 text-text-secondary group-hover:text-destructive" />
                 </button>
               </div>
             ))}
           </div>
         )}
       </section>
+
+      {/* Modal Dialog Kustom Konfirmasi Penghapusan Riwayat Dokumen */}
+      <RAZModal
+        isOpen={Boolean(fileToDelete)}
+        onClose={() => setFileToDelete(null)}
+        onConfirm={handleConfirmRemoveRecentFile}
+        variant="danger"
+        title="Hapus dari Riwayat Dokumen"
+        description={`Apakah Anda yakin ingin menghapus "${fileToDelete?.name}" dari daftar dokumen terbaru? Berkas asli di penyimpanan lokal Anda tidak akan terhapus.`}
+        confirmText="Hapus dari Riwayat"
+        cancelText="Batal"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

@@ -1,9 +1,19 @@
+/**
+ * Komponen: Dialog Instalasi Ekstensi Browser
+ * Lokasi: components/install-extension-dialog.tsx
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Modal dialog kustom yang menginformasikan pengguna mengenai ekstensi browser
+ * opsional untuk akses berkas sistem lokal langsung tanpa batasan sandbox web.
+ */
+
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
 import { useExtracted } from "next-intl";
 import { EXTENSION_STORE_URL } from "@/utils/extension";
+import { RAZ_CONFIG } from "@/lib/RAZBranding";
 
 interface InstallExtensionDialogProps {
   open: boolean;
@@ -37,15 +47,15 @@ export default function InstallExtensionDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="w-[400px] bg-popover rounded-2xl shadow-2xl ring-1 ring-foreground/10 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="w-[420px] bg-card border border-border rounded-2xl shadow-2xl ring-1 ring-border/50 overflow-hidden">
         <div className="px-8 pt-8 pb-4 flex flex-col items-center">
           <Image
             src="/logo.svg"
-            alt="ZIZIYI Office"
+            alt={`${RAZ_CONFIG.appName} Logo`}
             width={56}
             height={56}
-            className="mb-4"
+            className="mb-4 rounded-xl"
           />
           <h2 className="text-lg font-semibold text-foreground">
             {t("Extension Required")}

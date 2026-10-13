@@ -1,3 +1,13 @@
+/**
+ * Komponen: Navigasi Sidebar Utama
+ * Lokasi: components/main/sidebar.tsx
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Panel navigasi samping untuk dashboard RAZ Office, mencakup tombol aksi
+ * pembuatan dokumen baru dengan popover pemilihan jenis file, menu utama (Buka & Templat),
+ * serta tautan pengaturan dan informasi aplikasi.
+ */
+
 "use client";
 
 import Link from "next/link";

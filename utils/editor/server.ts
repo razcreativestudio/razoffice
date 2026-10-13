@@ -1,3 +1,12 @@
+/**
+ * Modul: Virtual Document Server (EditorServer)
+ * Lokasi: utils/editor/server.ts
+ * Diperbarui: 13 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Server mock virtual di sisi klien untuk mengintersepsi seluruh komunikasi
+ * ONLYOFFICE DocumentServer. Mengelola state dokumen, pengguna aktif (RAZ), konversi x2t, dan soket.
+ */
+
 import { converter } from "./x2t";
 import { MockSocket } from "./socket";
 import { User, Participant, AscSaveTypes, ServerOptions } from "./types";
@@ -33,7 +42,7 @@ export class EditorServer {
   private sessionId: string = "session-id";
   private user: User = {
     id: "uid",
-    name: "Me",
+    name: "RAZ",
   };
   private client = {
     buildVersion: "9.3.0",
