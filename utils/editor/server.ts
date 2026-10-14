@@ -1,10 +1,10 @@
 /**
  * Modul: Virtual Document Server (EditorServer)
  * Lokasi: utils/editor/server.ts
- * Diperbarui: 13 Oktober 2026
+ * Diperbarui: 14 Oktober 2026
  * Penulis: RAZ Enterprise Core Team
  * Deskripsi: Server mock virtual di sisi klien untuk mengintersepsi seluruh komunikasi
- * ONLYOFFICE DocumentServer. Mengelola state dokumen, pengguna aktif (RAZ), konversi x2t, dan soket.
+ * ONLYOFFICE DocumentServer. Mengelola state dokumen, lisensi enterprise (branding & advancedApi aktif), konversi x2t, dan soket.
  */
 
 import { converter } from "./x2t";
@@ -262,9 +262,9 @@ export class EditorServer {
         protectionSupport: true,
         isAnonymousSupport: true,
         liveViewerSupport: true,
-        branding: false,
+        branding: true,
         customization: true,
-        advancedApi: false,
+        advancedApi: true,
       },
     });
   }

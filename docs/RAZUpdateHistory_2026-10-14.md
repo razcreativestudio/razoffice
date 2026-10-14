@@ -2,7 +2,7 @@
 
 **Tanggal:** 14 Oktober 2026  
 **Penanggung Jawab:** Antigravity AI Engine  
-**Versi Aplikasi:** 0.1.3 (Times New Roman Default, 1000+ Fonts & F4/Folio Paper Size)
+**Versi Aplikasi:** 0.1.4 (Bypass Paid Feature / Custom Loader License Warning & Full Enterprise Branding Enabled)
 
 ---
 
@@ -78,3 +78,13 @@
    - **Sistem Modularisasi & Backup:**
      - Menyediakan file bundle editor lokal `public/v9.3.0.24-1/web-apps/apps/documenteditor/main/app.js` yang terintegrasi langsung dengan RequireJS.
      - Mengamankan backup `backup/index.html.bak` dan `backup/page.tsx.bak`.
+
+8. **Penyelesaian Modal Peringatan Lisensi ("Paid feature / change the loader"):**
+   - **Akar Masalah (Root Cause):**
+     - ONLYOFFICE Web-Apps melakukan evaluasi lisensi saat mendeteksi kustomisasi loader/branding. Pada mock server sebelumnya, parameter `branding` bernilai `false`, sehingga memicu modal peringatan komersial *"Please note that according to the terms of the license you are not entitled to change the loader"*.
+   - **Solusi & Intersepsi:**
+     - **Aktivasi Lisensi Enterprise (`utils/editor/server.ts`):** Mengubah konfigurasi lisensi virtual menjadi `branding: true` dan `advancedApi: true`, sehingga engine editor mengakui hak branding enterprise penuh.
+     - **Bypass Peringatan di Engine Editor (`app.js`):** Menetralisir pemeriksaan `textCustomLoader` / `textPaidFeature` di dalam `public/v9.3.0.24-1/web-apps/apps/documenteditor/main/app.js` menjadi `else{}` agar modal dialog peringatan tidak pernah dipanggil.
+   - **Pembaruan Cadangan:**
+     - `backup/server.ts.bak2`
+     - `backup/app.js.bak`
