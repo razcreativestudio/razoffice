@@ -1,7 +1,7 @@
 <!--
   Proyek: RAZ Office
   Pembaruan Terakhir: 14 Oktober 2026
-  Deskripsi: README Utama sebagai Single Source of Truth Proyek RAZ Office
+  Deskripsi: README Utama — Panduan & Informasi Lengkap RAZ Office
 -->
 
 <p align="center">
@@ -11,7 +11,7 @@
 <h1 align="center">RAZ Office</h1>
 
 <p align="center">
-  <strong>Solusi Suite Dokumen Perkantoran Modern, Berbasis Web & Local-First (Word, Excel, PowerPoint, PDF).</strong>
+  <strong>Aplikasi Office Web Modern, Cepat & 100% Privat di Browser (Word, Excel, PowerPoint, PDF).</strong>
 </p>
 
 <p align="center">
@@ -23,78 +23,67 @@
 
 ---
 
-## 🚀 Ringkasan Proyek
-**RAZ Office** adalah aplikasi perkantoran web mutakhir yang menghadirkan pengalaman membuka, membaca, dan menyunting dokumen Microsoft Office (`.docx`, `.xlsx`, `.pptx`) serta pratinjau `.pdf` secara instan langsung di peramban web tanpa memerlukan instalasi software desktop dan tanpa mengunggah dokumen Anda ke server pihak ketiga (**Local-First & Privacy-Focused**).
+## 💡 Apa itu RAZ Office?
 
-Dengan memanfaatkan kekuatan WebAssembly (**x2t WASM**) serta mesin inti **ONLYOFFICE Web-Apps SDK**, seluruh pemrosesan dokumen dieksekusi secara terisolasi di sisi klien (*client-side*).
+**RAZ Office** adalah aplikasi perkantoran berbasis web yang bisa kamu pakai langsung di browser tanpa perlu instal aplikasi berat di komputermu. Kamu bisa buka, baca, dan edit file Microsoft Office (`.docx`, `.xlsx`, `.pptx`) dan pratinjau `.pdf` secara instan!
+
+Yang paling penting: **100% Local-First & Aman**. File kamu nggak pernah di-upload ke server cloud pihak ketiga mana pun. Semua pemrosesan dokumen berjalan langsung di browser perangkatmu sendiri menggunakan teknologi WebAssembly (**x2t WASM**) dan engine **ONLYOFFICE**.
 
 ---
 
 ## ✨ Fitur Unggulan
-- 📂 **Multi-Format Tanpa Konversi Server**: Mendukung dokumen Word (`.docx`, `.doc`), Excel (`.xlsx`, `.xls`), PowerPoint (`.pptx`, `.ppt`), dan berkas PDF.
-- 🔒 **Privasi Mutlak (Local-First)**: Berkas diproses sepenuhnya di browser pengguna; data tidak diunggah ke cloud pihak ketiga.
-- ⚡ **Kinerja Tinggi**: Dibangun dengan Next.js 16 (Turbopack) & Tailwind CSS v4 untuk kecepatan loading instan.
-- 📦 **Penyimpanan Riwayat Lokal**: Menggunakan IndexedDB untuk mengingat riwayat dokumen yang baru saja dibuka.
-- 🎨 **Antarmuka Enterprise Premium**: Mendukung tema Modern Dark, Modern Light, Classic Light, dan High Contrast dengan palet visual presisi.
-- 🌐 **Dukungan Multi-Bahasa**: Tersedia 52 bahasa termasuk Bahasa Indonesia dan Bahasa Inggris.
+
+- 📂 **Dukungan Format Lengkap**: Buka dan edit file Word (`.docx`, `.doc`), Excel (`.xlsx`, `.xls`), PowerPoint (`.pptx`, `.ppt`), serta file PDF.
+- 🔒 **Privasi Terjamin (Local-First)**: Dokumen diproses secara lokal di browser kamu, no tracking & no cloud upload.
+- ⚡ **Super Cepat & Ringan**: Dibangun pakai Next.js 16 (Turbopack) & Tailwind CSS v4, loading kilat tanpa lag.
+- 💾 **Riwayat File Otomatis**: Dilengkapi penyimpanan lokal (IndexedDB) supaya file yang baru kamu buka gampang dibuka kembali.
+- 🎨 **Tampilan Modern & Rapi**: Pilihan tema tampilan yang nyaman di mata (Modern Dark, Modern Light, Classic Light, High Contrast).
+- 🌐 **Mendukung Banyak Bahasa**: Tersedia dalam berbagai bahasa termasuk Bahasa Indonesia dan Bahasa Inggris yang natural.
 
 ---
 
-## 🛠️ Tumpukan Teknologi (Tech Stack)
-- **Framework Utama**: [Next.js 16](https://nextjs.org/) (React 19, Turbopack, Static Export)
-- **Mesin Dokumen**: [ONLYOFFICE Web-Apps](https://github.com/ONLYOFFICE/web-apps) & [x2t WASM](https://github.com/cryptpad/onlyoffice-x2t-wasm)
-- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
-- **Komponen UI**: [Radix UI](https://www.radix-ui.com/), [Tailwind CSS v4](https://tailwindcss.com/), dan [Lucide Icons](https://lucide.dev/)
-- **Database Lokal**: [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) via `idb`
-- **Sistem Internasionalisasi**: `next-intl`
-
----
-
-## 📂 Dokumentasi Resmi RAZ Enterprise
-Seluruh dokumentasi teknis dan arsitektur tersimpan di folder `docs/`:
-1. [Rencana Proyek & Roadmap (`RAZProjectPlan.md`)](file:///c:/laragon/www/razoffice/docs/RAZProjectPlan.md)
-2. [Peta Struktur Direktori (`RAZProjectStructure.md`)](file:///c:/laragon/www/razoffice/docs/RAZProjectStructure.md)
-3. [Panduan Pengembang & Pengguna (`RAZGuide.md`)](file:///c:/laragon/www/razoffice/docs/RAZGuide.md)
-4. [Log Implementasi Bertahap (`RAZImplementation.md`)](file:///c:/laragon/www/razoffice/docs/RAZImplementation.md)
-5. [Riwayat Pembaruan Harian (`RAZUpdateHistory_2026-10-13.md`)](file:///c:/laragon/www/razoffice/docs/RAZUpdateHistory_2026-10-13.md)
-
----
-
-## 💻 Memulai Pengembangan Lokal
+## 🚀 Cara Menjalankan di Komputer Lokal
 
 ### 1. Prasyarat
-- Node.js versi 20 atau lebih baru (direkomendasikan Node.js v25)
-- pnpm (v9+ atau v12+)
+- **Node.js**: Versi 20 ke atas (disarankan v22 atau v25)
+- **Package Manager**: `pnpm` (disarankan) atau `npm`
 
-### 2. Kloning Repositori
+### 2. Langkah Instalasi
+Clone repository dan install dependensinya:
 ```bash
 git clone https://github.com/razcreativestudio/razoffice.git
 cd razoffice
-```
 
-### 3. Instalasi Dependensi
-```bash
+# Install dependencies pakai pnpm
 pnpm install
 ```
 
-### 4. Menjalankan Server Pengembangan
+### 3. Jalankan Mode Development
 ```bash
 pnpm run dev
 ```
-Buka browser pada alamat [http://localhost:3000](http://localhost:3000).
+Buka browsermu dan akses `http://localhost:3000`. Aplikasi langsung siap dipakai!
 
-### 4. Kompilasi Produksi (Static Export)
+### 4. Build untuk Production
 ```bash
 pnpm run build
 ```
+File hasil build statis yang siap di-deploy bakal otomatis tersimpan di folder `./out`.
+
+---
+
+## 🛠️ Arsitektur Singkat (Buat yang Penasaran Cara Kerjanya)
+
+1. **Client-Side Document Conversion (x2t WASM)**:  
+   Waktu kamu buka file `.docx`, `.xlsx`, atau `.pptx`, peramban menjalankan WebAssembly `x2t.wasm` lewat Web Worker untuk mengonversi dokumen jadi format biner ONLYOFFICE secara instan di memori komputermu.
+
+2. **In-Browser Virtual Server**:  
+   Alih-alih komunikasi ke server luar, RAZ Office punya *mock server* virtual di memori browser yang meng-handle semua request iframe ONLYOFFICE secara lokal.
+
+3. **Safe & Private Saving**:  
+   Saat kamu simpan file atau download, mesin x2t mengemas dokumen kembali ke format aslinya dan langsung menyimpannya ke storage komputermu.
 
 ---
 
 ## 📜 Lisensi & Atribusi
-Proyek ini dilisensikan di bawah **GNU Affero General Public License Version 3 (AGPL v3)**.
-
-Apresiasi khusus kepada:
-- [ONLYOFFICE Web Apps](https://github.com/ONLYOFFICE/web-apps)
-- [OnlyOffice x2t WASM (CryptPad)](https://github.com/cryptpad/onlyoffice-x2t-wasm)
-- [ONLYOFFICE SDKJS](https://github.com/ONLYOFFICE/sdkjs)
-- [Office Website (Bao Tlake)](https://github.com/baotlake/office-website)
+Proyek ini dibangun dan dikembangkan dengan bangga oleh tim **RAZ Enterprise** di atas fondasi open-source ONLYOFFICE. Berada di bawah lisensi terbuka **GNU Affero General Public License v3.0 (AGPL v3)**.

@@ -1,30 +1,30 @@
 /**
  * Konfigurasi: RAZBranding
  * Lokasi: lib/RAZBranding.ts
- * Dibuat: 13 Oktober 2026
+ * Diperbarui: 14 Oktober 2026
  * Penulis: RAZ Enterprise Core Team
- * Deskripsi: Pusat konfigurasi identitas, metadata, dan informasi produk RAZ Office.
- * Seluruh komponen dan metadata mengacu pada konstanta di file ini untuk menjaga konsistensi.
+ * Deskripsi: Pusat konfigurasi branding, metadata, dan info produk RAZ Office.
+ * Dibuat terpusat biar gampang di-maintain dan konsisten di seluruh aplikasi.
  */
 
 export const RAZ_CONFIG = {
   /** Nama resmi aplikasi */
   appName: "RAZ Office",
   /** Versi aplikasi */
-  version: "0.1.1",
+  version: "1.1.0",
   /** Tagline resmi produk */
-  tagline: "Suite Perkantoran Web Modern, Mandiri & Privat (Local-First)",
-  /** Deskripsi panjang produk */
+  tagline: "Modern, Private & Serverless Web Office Suite (Word, Excel, PowerPoint, PDF)",
+  /** Deskripsi produk yang ramah & mudah dimengerti */
   description:
-    "Suite perkantoran berbasis web modern berstandar enterprise. Buka, baca, dan sunting dokumen Word, Excel, dan PowerPoint secara lokal di browser Anda dengan jaminan privasi data tanpa perlu diunggah ke server pihak ketiga.",
+    "Aplikasi office berbasis web yang modern, cepat, dan 100% privat. Buka, baca, dan edit file Word, Excel, PowerPoint, serta PDF langsung di browsermu tanpa perlu upload ke server mana pun.",
   /** Domain dan URL utama */
   siteUrl: "http://localhost:3000",
-  /** Kata kunci pencarian (SEO keywords) */
+  /** Keyword SEO */
   keywords: [
     "RAZ Office",
     "RAZ Enterprise",
     "web office",
-    "suite perkantoran online",
+    "aplikasi office gratis",
     "Word online",
     "Excel online",
     "PowerPoint online",
@@ -35,9 +35,9 @@ export const RAZ_CONFIG = {
     "local-first office",
     "privasi dokumen",
   ],
-  /** Penulis & Organisasi */
+  /** Author & Tim Pengembang */
   author: "RAZ Enterprise",
-  /** Repositori GitHub resmi */
+  /** Repository GitHub resmi */
   githubUrl: "https://github.com/razcreativestudio/razoffice",
   /** Lisensi resmi */
   license: "AGPL v3",

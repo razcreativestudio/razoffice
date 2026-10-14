@@ -1,119 +1,84 @@
-# RAZ Office - Struktur Proyek (Project Structure)
-**Versi:** 1.0.0  
-**Tanggal:** 13 Oktober 2026  
-**Standar:** Standar Direktori & Naming Convention RAZ Enterprise
+# RAZ Office — Struktur Folder & Arsitektur Kode
+
+**Versi:** 1.1.0  
+**Tanggal:** 14 Oktober 2026  
+**Penulis:** RAZ Enterprise Core Team  
 
 ---
 
-## 1. Ikhtisar Hierarki Direktori
-Berikut adalah peta struktur direktori dan fungsi masing-masing komponen di dalam proyek **RAZ Office**:
+## 📂 Peta Struktur Folder Proyek
+
+Biar gampang dipahami, berikut denah folder di dalam proyek **RAZ Office** beserta fungsinya masing-masing:
 
 ```text
 razoffice/
-├── app/                              # Next.js 16 App Router Directory
-│   ├── (img)/                        # Route handler dinamis untuk generator image/OG
-│   │   └── og.png/route.tsx          # Dynamic OpenGraph image generator
-│   ├── (main)/                       # Route group untuk layout utama dashboard
-│   │   ├── about/page.tsx            # Halaman Informasi & Tentang RAZ Office
-│   │   ├── settings/page.tsx         # Halaman Pengaturan (Bahasa, Tema Editor, dsb)
-│   │   ├── template/                 # Halaman Katalog Templat Dokumen (Docx, Xlsx, Pptx)
-│   │   ├── layout.tsx                # Shell layout utama (Header, Sidebar, Area Konten)
-│   │   ├── opengraph-image.tsx       # Metadata gambar OG
-│   │   └── page.tsx                  # Beranda utama (File Picker & Recent Files)
-│   ├── editor/                       # Ruang Kerja Penyunting Dokumen (Full-Screen Editor)
-│   │   ├── layout.tsx                # Layout isolasi khusus editor iframe
-│   │   └── page.tsx                  # Engine penyunting (menghubungkan iframe ONLYOFFICE ke mock backend)
-│   ├── favicon.ico                   # Favicon browser
-│   ├── globals.css                   # Konfigurasi Tailwind CSS v4 & variabel warna root
-│   ├── layout.tsx                    # Root Layout HTML/Body dan provider konteks
-│   ├── robots.ts                     # Konfigurasi SEO crawler
-│   └── sitemap.ts                    # Generator XML sitemap
+├── app/                              # Halaman & Rute Utama (Next.js 16 App Router)
+│   ├── (main)/                       # Halaman tampilan luar (Dashboard)
+│   │   ├── about/                    # Halaman About (info RAZ Office & open-source)
+│   │   ├── settings/                 # Halaman Pengaturan (ganti tema & bahasa)
+│   │   ├── template/                 # Halaman Galeri Template siap pakai
+│   │   ├── layout.tsx                # Shell layout (Header, Sidebar, Dark Mode glow)
+│   │   └── page.tsx                  # Halaman Beranda (Dropzone & Recent Files)
+│   ├── editor/                       # Ruang Kerja Editor Dokumen (Layar Penuh)
+│   │   ├── layout.tsx                # Layout khusus editor
+│   │   └── page.tsx                  # Canvas editor ONLYOFFICE
+│   ├── globals.css                   # Styling global (Tailwind CSS v4 & tema warna emas)
+│   └── layout.tsx                    # Root layout peramban
 │
-├── backup/                           # Direktori Terpusat Cadangan Kode (Sesuai Aturan GEMINI.md)
-│   └── (File backup pra-modifikasi disimpan di sini)
+├── backup/                           # Folder Cadangan Kode (Sesuai Aturan GEMINI.md)
+│   └── (Semua backup file pra-modifikasi tersimpan aman di sini)
 │
-├── components/                       # Komponen Antarmuka Pengguna (UI Components)
-│   ├── image/                        # Komponen penampil gambar dokumen
-│   ├── main/                         # Komponen halaman utama dashboard
-│   │   ├── about-view.tsx            # Tampilan halaman tentang aplikasi
-│   │   ├── header.tsx                # Header navigasi & tombol aksi cepat pembuatan dokumen
-│   │   ├── mobile-nav.tsx            # Navigasi responsif untuk perangkat mobile / tablet
-│   │   ├── open-view.tsx             # Area drop file, picker lokal & cloud, daftar dokumen terakhir
-│   │   ├── settings-view.tsx         # Antarmuka panel preferensi dan konfigurasi tema
-│   │   ├── sidebar.tsx               # Sidebar navigasi dashboard & ekstensi browser
-│   │   └── template-view.tsx         # Galeri templat siap pakai beraneka format
-│   ├── svg/                          # Ikon dan ilustrasi vektor (Format SVG/React)
-│   │   └── index.ts                  # Export koleksi SVG (Logo, tema preview, dll)
-│   ├── ui/                           # Komponen UI atomik berbasis Radix UI
-│   │   ├── button.tsx
-│   │   ├── dialog.tsx
-│   │   ├── popover.tsx
-│   │   ├── select.tsx
-│   │   └── tooltip.tsx
-│   ├── document-icon.tsx             # Ikon spesifik format dokumen (DOCX, XLSX, PPTX, PDF)
-│   ├── drag-drop-overlay.tsx         # Overlay visual saat pengguna menyeret file ke layar
-│   ├── extension-prompt.tsx          # Banner petunjuk instalasi ekstensi desktop/browser
-│   ├── file-picker-card.tsx          # Kartu pengunggah file dengan dukungan Uppy & Cloud Drives
-│   ├── i18n-provider.tsx             # Provider internasionalisasi next-intl
-│   └── install-extension-dialog.tsx  # Dialog kustom untuk ekstensi pendukung
+├── components/                       # Komponen Tampilan (UI Components)
+│   ├── main/                         # Komponen layar dashboard
+│   │   ├── about-view.tsx            # Halaman About bernuansa modern
+│   │   ├── header.tsx                # Header atas dengan logo emas RAZ Office
+│   │   ├── open-view.tsx             # Halaman beranda utama dengan kartu dokumen
+│   │   ├── settings-view.tsx         # Panel pengaturan tema & bahasa
+│   │   ├── sidebar.tsx               # Sidebar navigasi bersih (tanpa iklan ekstensi)
+│   │   └── template-view.tsx         # Galeri template beraneka kategori
+│   ├── ui/                           # Komponen antarmuka atomik
+│   │   ├── RAZModal.tsx              # Modal dialog kustom standar RAZ Enterprise
+│   │   └── (button, dialog, popover, select, tooltip)
+│   ├── document-icon.tsx             # Ikon warna-warni untuk Word, Excel, PPT, PDF
+│   ├── drag-drop-overlay.tsx         # Efek layar saat kamu seret file ke aplikasi
+│   └── file-picker-card.tsx          # Kartu dropzone modern untuk buka file dari PC
 │
-├── docs/                             # Dokumentasi Arsitektur & Operasional RAZ Enterprise
-│   ├── RAZProjectPlan.md             # Rencana proyek dan tahapan pengembangan
-│   ├── RAZProjectStructure.md        # Peta arsitektur dan struktur file (dokumen ini)
-│   ├── RAZGuide.md                   # Panduan operasional, pengembangan, dan deployment
-│   ├── RAZImplementation.md          # Log implementasi tahapan teknis
-│   └── RAZUpdateHistory_2026-10-13.md# Catatan harian aktivitas dan perubahan kode
+├── docs/                             # Dokumen Panduan & Arsitektur
+│   ├── RAZGuide.md                   # Panduan user & developer (bahasa santai)
+│   ├── RAZImplementation.md          # Log progres pengerjaan bertahap
+│   ├── RAZProjectPlan.md             # Rencana kerja & milestone proyek
+│   ├── RAZProjectStructure.md        # Dokumen denah folder ini
+│   └── RAZUpdateHistory_*.md         # Catatan perubahan harian
 │
-├── hooks/                            # Custom React Hooks
-│   ├── use-debounce.ts               # Hook debounce interaksi input pencarian
-│   ├── use-page-title.ts             # Hook sinkronisasi judul halaman dinamis
-│   └── use-window-size.ts            # Hook responsivitas viewport
+├── lib/                              # Konfigurasi & Utility Inti
+│   ├── RAZBranding.ts                # Pusat nama, logo, tagline, dan info produk
+│   ├── document-types.ts             # Pengaturan format dokumen (warna, ekstensi)
+│   └── utils.ts                      # Helper fungsi umum
 │
-├── i18n/                             # Konfigurasi Multi-Bahasa
-│   ├── request.ts                    # Inisialisasi request handler next-intl
-│   └── routing.ts                    # Logika routing berdasarkan locale
-│
-├── lib/                              # Utilitas umum & pustaka inti
-│   ├── document-types.ts             # Metadata tipe dokumen dan warna representatif
-│   └── utils.ts                      # Penggabung class CSS (clsx + tailwind-merge)
-│
-├── messages/                         # Kamus Terjemahan Internasional (52 Bahasa)
-│   ├── id.json                       # Terjemahan Bahasa Indonesia
-│   ├── en.json                       # Terjemahan Bahasa Inggris
-│   └── ...                           # Terjemahan bahasa dunia lainnya
+├── messages/                         # Kamus Terjemahan Bahasa (i18n)
+│   ├── id.json                       # Bahasa Indonesia (gaya santai & kekinian)
+│   └── en.json                       # Bahasa Inggris
 │
 ├── public/                           # Aset Statis Publik
-│   ├── logo.svg                      # Logo vektor aplikasi
-│   ├── templates/                    # Sampel file template docx, xlsx, pptx dan pratinjaunya
-│   ├── v9.3.0.24-1/                  # Bundle inti ONLYOFFICE Web-Apps (SDKJS & Dokumen Editor)
-│   └── x2t/                          # Binary WebAssembly pengonversi format (x2t.wasm + worker)
+│   ├── logo.svg                      # Logo SVG master tumpukan dokumen emas
+│   ├── logo-name_black.svg           # Logo toolbar editor (tema terang)
+│   ├── logo-name_white.svg           # Logo toolbar editor (tema gelap)
+│   ├── x2t/                          # WebAssembly binary (x2t.wasm) untuk konversi dokumen
+│   └── files/                        # File template bawaan siap pakai
 │
-├── store/                            # State Management Terpusat (Zustand)
-│   └── index.ts                      # Store aplikasi: tema, bahasa, preferensi, riwayat file
-│
-├── types/                            # Deklarasi Type Definition TypeScript
-│   └── global.d.ts                   # Ekstensi tipe window dan global interfaces
-│
-└── utils/                            # Mesin Logika Khusus Editor & File Converter
-    ├── editor/                       # Core in-browser mock server ONLYOFFICE
-    │   ├── empty.ts                  # Raw binary templates kosong (DOCX, XLSX, PPTX)
-    │   ├── fetch.ts                  # Interseptor Fetch API untuk iframe editor
-    │   ├── plugins.ts                # Pengelola plugin ONLYOFFICE
-    │   ├── server.ts                 # Virtual Document Server (pengganti DocumentServer backend)
-    │   ├── socket.ts                 # Virtual WebSocket emulator (sinkronisasi perubahan lokal)
-    │   ├── types.ts                  # Definisi data komunikasi editor dan peserta sesi
-    │   ├── utils.ts                  # Utilitas bantu penentuan MIME type dan URL
-    │   ├── x2t.ts                    # Antarmuka komunikasi dengan Web Worker WASM x2t
-    │   ├── x2t.worker.ts             # Background worker pemroses konversi berkas binary
-    │   └── xhr.ts                    # Interseptor XMLHttpRequest
-    ├── desktop.ts                    # Integrasi kemampuan desktop & electron wrapper
-    ├── extension.ts                  # Integrasi ekstensi browser Chromium
-    └── recent-files.ts               # Abstraksi database lokal IndexedDB (idb)
+└── utils/                            # Mesin Pemrosesan Dokumen
+    ├── editor/                       # Jantung sistem server virtual in-browser
+    │   ├── server.ts                 # Virtual DocumentServer di memori
+    │   ├── x2t.worker.ts             # Web Worker untuk komputasi di latar belakang
+    │   └── utils.ts                  # URL & file helper
+    └── recent-files.ts               # Logika penyimpanan riwayat file di IndexedDB
 ```
 
 ---
 
-## 2. Aturan Penamaan File Baru (RAZ Convention)
-Sesuai aturan mutlak di file `GEMINI.md`:
-* Setiap file baru yang ditambahkan ke dalam proyek ini WAJIB menggunakan awalan `RAZ` (contoh: `RAZModalDialog.tsx`, `RAZBrandingConfig.ts`, `RAZThemeSelector.tsx`).
-* Modul utilitas atau helper baru wajib diletakkan di direktori yang sesuai dengan tanggung jawab arsitekturalnya.
+## 💡 Alur Data Dokumen (Secara Sederhana)
+
+1. **User Membuka File**: File dipilih lewat klik atau di-drag ke dropzone di beranda.
+2. **Konversi di Latar Belakang**: File diproses oleh `x2t.worker.ts` memakai WebAssembly tanpa menyentuh server internet.
+3. **Penyuntingan di Layar**: Iframe ONLYOFFICE merender dokumen dan terhubung secara virtual ke `server.ts` di memori browser.
+4. **Simpan Otomatis**: Riwayat file disimpan di database internal browser (IndexedDB), sehingga riwayat tetap ada waktu halaman ditutup.

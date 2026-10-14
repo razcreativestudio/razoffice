@@ -1,10 +1,10 @@
 /**
  * Komponen: Halaman Tentang (AboutView)
  * Lokasi: components/main/about-view.tsx
- * Diperbarui: 13 Oktober 2026
+ * Diperbarui: 14 Oktober 2026
  * Penulis: RAZ Enterprise Core Team
- * Deskripsi: Halaman informasi resmi mengenai RAZ Office, arsitektur local-first,
- * kepatuhan lisensi open-source OnlyOffice (AGPL v3), dan komitmen privasi pengguna.
+ * Deskripsi: Halaman info resmi mengenai RAZ Office, arsitektur local-first murni di browser,
+ * komitmen privasi pengguna, dan dukungan terhadap lisensi open-source OnlyOffice (AGPL v3).
  */
 
 "use client";
@@ -17,7 +17,7 @@ import { RAZ_CONFIG } from "@/lib/RAZBranding";
 
 export function AboutView() {
   const t = useExtracted();
-  usePageTitle(`Tentang — ${RAZ_CONFIG.appName}`);
+  usePageTitle(`About — ${RAZ_CONFIG.appName}`);
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 py-4">
@@ -34,20 +34,20 @@ export function AboutView() {
             Office
           </span>
         </div>
-        <p className="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg sm:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
           {RAZ_CONFIG.description}
         </p>
 
         {/* Badge Keunggulan Sistem */}
         <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-            <Lock className="w-3.5 h-3.5" /> 100% Local-First & Privat
+            <Lock className="w-3.5 h-3.5" /> 100% Local & Private
           </span>
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
             <Cpu className="w-3.5 h-3.5" /> WebAssembly x2t Engine
           </span>
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-            <Sparkles className="w-3.5 h-3.5" /> Standar RAZ Enterprise
+            <Sparkles className="w-3.5 h-3.5" /> Enterprise Edition
           </span>
         </div>
       </div>
@@ -61,9 +61,7 @@ export function AboutView() {
           </div>
           <h3 className="text-xl font-bold mb-3">{t("Open Source")}</h3>
           <p className="text-text-secondary text-sm leading-relaxed mb-6">
-            {t(
-              "Kami percaya pada kekuatan komunitas. Kode sumber untuk proyek ini tersedia di GitHub untuk dilihat, dikontribusikan, dan ditingkatkan oleh semua orang.",
-            )}
+            Kami percaya pada kekuatan kolaborasi open source. Seluruh source code proyek ini terbuka di GitHub untuk dilihat, dipelajari, dan dikembangkan bareng komunitas developer di seluruh dunia.
           </p>
           <a
             href={RAZ_CONFIG.githubUrl}
@@ -71,7 +69,7 @@ export function AboutView() {
             rel="noopener noreferrer"
             className="inline-flex items-center text-sm font-semibold text-primary hover:underline"
           >
-            {t("Lihat di GitHub")} &rarr;
+            Lihat Repository di GitHub &rarr;
           </a>
         </div>
 
@@ -81,12 +79,10 @@ export function AboutView() {
             <ShieldCheck className="w-6 h-6 text-primary" />
           </div>
           <h3 className="text-xl font-bold mb-3">
-            {t("Didukung oleh OnlyOffice")}
+            Powered by OnlyOffice
           </h3>
           <p className="text-text-secondary text-sm leading-relaxed">
-            {t(
-              "Proyek ini dibangun di atas fondasi kuat kode sumber terbuka OnlyOffice. Kami mematuhi dan mendukung lisensi sumber terbuka OnlyOffice secara ketat, memastikan ekosistem yang berkelanjutan untuk pemrosesan dokumen.",
-            )}
+            Aplikasi ini dibangun di atas fondasi core engine OnlyOffice yang tangguh. Kami sepenuhnya mematuhi lisensi AGPL v3 untuk menjamin ekosistem software pengolah dokumen yang berkelanjutan, aman, dan transparan.
           </p>
         </div>
       </div>
@@ -95,11 +91,9 @@ export function AboutView() {
       <div className="p-10 bg-linear-to-br from-primary/10 via-background to-orange-500/10 border border-primary/20 rounded-3xl text-center space-y-4 shadow-lg shadow-primary/5">
         <Heart className="w-8 h-8 text-red-500 mx-auto fill-red-500 animate-pulse" />
         <div className="space-y-2">
-          <h3 className="text-2xl font-bold">{t("Komitmen Kami")}</h3>
+          <h3 className="text-2xl font-bold">Misi & Komitmen Kami</h3>
           <p className="text-text-secondary text-sm max-w-xl mx-auto leading-relaxed">
-            {t(
-              "Tujuan kami adalah memberikan pengalaman kantor yang mulus dan mengutamakan lokal sambil mempertahankan standar kompatibilitas dan kepatuhan sumber terbuka tertinggi.",
-            )}
+            Fokus kami simpel: memberikan pengalaman mengolah dokumen yang cepat, bebas ribet, dan 100% aman di perambanmu tanpa perlu upload berkas ke cloud pihak ketiga.
           </p>
         </div>
       </div>

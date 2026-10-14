@@ -1,74 +1,77 @@
-# RAZ Office - Panduan Pengembang & Pengguna (Developer & User Guide)
-**Versi:** 1.0.0  
-**Tanggal:** 13 Oktober 2026  
-**Standar Kualitas:** RAZ Enterprise Standards
+# RAZ Office — Developer & User Guide
+
+**Versi:** 1.1.0  
+**Tanggal:** 14 Oktober 2026  
+**Penulis:** RAZ Enterprise Core Team  
 
 ---
 
-## 1. Pendahuluan
-**RAZ Office** adalah aplikasi pengolah kata, lembar kerja (*spreadsheet*), dan presentasi berbasis web yang beroperasi secara *Local-First*. Pengguna dapat membuka, menyunting, dan menyimpan dokumen secara instan di peramban web tanpa memerlukan instalasi server ONLYOFFICE terpisah (*document server*) ataupun proses *upload* ke server pihak ketiga.
+## 🌟 Sekilas Tentang RAZ Office
+
+Selamat datang di panduan resmi **RAZ Office**!  
+Singkatnya, **RAZ Office** adalah aplikasi pengolah dokumen (Word, Excel, PowerPoint, dan PDF) berbasis web yang bekerja dengan konsep **Local-First**. 
+
+Artinya, semua proses buka file, ngetik, hitung rumus, sampai bikin slide berjalan 100% di browser kamu sendiri. Nggak ada file yang dikirim ke server luar, jadi privasi datamu benar-benar aman.
 
 ---
 
-## 2. Prasyarat Lingkungan Pengembangan
-Untuk menjalankan atau mengembangkan proyek ini di komputer lokal:
-1. **Node.js**: Versi 20+ (direkomendasikan Node.js v22 atau v25).
-2. **Package Manager**: `pnpm` (direkomendasikan versi 9+ / 12+) atau `npm`.
-3. **Browser Modern**: Google Chrome, Mozilla Firefox, Microsoft Edge, atau Safari dengan dukungan WebAssembly (WASM) dan SharedArrayBuffer / Web Workers.
+## 💻 Cara Install & Jalanin di Komputer Lokal
 
----
+Buat kamu yang mau nyoba atau ngembangin proyek ini di laptop/PC lokal, ikuti langkah santai berikut:
 
-## 3. Menjalankan Proyek Secara Lokal
+### 1. Siapkan Kebutuhan Awal
+- **Node.js**: Versi 20+ (rekomendasi Node.js v22 atau v25).
+- **Package Manager**: Gunakan `pnpm` (rekomendasi versi 9 atau lebih baru).
+- **Web Browser**: Chrome, Edge, Firefox, atau Safari versi terkini.
 
-### A. Instalasi Dependensi
-Jalankan perintah berikut di direktori proyek:
+### 2. Install Dependensi
+Buka terminal di folder proyek, lalu jalankan:
 ```bash
 pnpm install
 ```
-*Catatan untuk lingkungan pnpm v10+: jika muncul peringatan persetujuan build script, gunakan:*
+*Tips buat pnpm v10+: Kalau muncul notifikasi script build, jalankan:*
 ```bash
 pnpm install --dangerously-allow-all-builds
 ```
 
-### B. Menjalankan Server Pengembangan (Dev Mode)
+### 3. Jalankan Mode Dev (Development)
 ```bash
 pnpm run dev
 ```
-Aplikasi akan dapat diakses pada browser di alamat:
-`http://localhost:3000`
+Setelah jalan, buka browser dan kunjungi:  
+👉 **`http://localhost:3000`**
 
-### C. Melakukan Kompilasi Produksi (Production Build)
+### 4. Build untuk Production
+Kalau aplikasinya sudah siap di-deploy ke hosting atau server:
 ```bash
 pnpm run build
 ```
-Hasil kompilasi berupa situs statis teroptimasi (*Static Export*) akan berada di folder `./out`.
+Hasil build berupa file website statis langsung tersimpan rapi di folder `./out`.
 
 ---
 
-## 4. Arsitektur Teknis RAZ Office
+## 🔍 Gimana Cara Kerjanya di Balik Layar?
 
-### A. Konversi Dokumen Menggunakan x2t WebAssembly
-Ketika berkas `.docx`, `.xlsx`, atau `.pptx` dipilih oleh pengguna:
-1. Berkas dibaca sebagai `ArrayBuffer` di browser.
-2. Web Worker `utils/editor/x2t.worker.ts` mengirimkan byte data ke binary `public/x2t/x2t.wasm`.
-3. Engine x2t melakukan konversi format biner Microsoft Office menjadi struktur biner internal ONLYOFFICE (`.bin`).
-4. Hasil konversi dikembalikan ke thread utama tanpa menyentuh server web sama sekali.
+Bagi orang awam maupun developer, ini gambaran gampang kenapa RAZ Office bisa ngedit dokumen Word & Excel tanpa server backend:
 
-### B. Mock Document Server (`EditorServer`)
-Editor ONLYOFFICE biasanya memerlukan komunikasi dua arah dengan Document Server via HTTP dan WebSocket. Di RAZ Office:
-1. `utils/editor/fetch.ts` dan `utils/editor/xhr.ts` mengintersepsi semua panggilan jaringan dari iframe editor.
-2. `utils/editor/server.ts` merespons seluruh permintaan dokumen secara virtual di memori lokal.
-3. `utils/editor/socket.ts` mengemulasi pertukaran event kolaborasi/penyimpanan secara asinkron.
-4. Saat pengguna menekan tombol Simpan (Save) atau mengunduh dokumen, berkas di-pack kembali ke format aslinya oleh x2t WASM dan diunduh langsung ke sistem berkas lokal pengguna.
+1. **Konversi Dokumen di Browser (x2t WebAssembly)**  
+   Ketika kamu pilih file `.docx`, `.xlsx`, atau `.pptx`:
+   - File dibaca oleh browser dalam bentuk memori (*ArrayBuffer*).
+   - Mesin WebAssembly bernama `x2t.wasm` langsung mengonversi format dokumen Microsoft Office ke format internal editor ONLYOFFICE.
+   - Proses ini berlangsung sekejap di memori laptopmu tanpa pernah terhubung ke internet.
 
-### C. Penyimpanan Berkas Riwayat (IndexedDB)
-Daftar berkas yang baru saja dibuka disimpan secara privat dan terenkripsi secara lokal di browser melalui IndexedDB (`idb`). Tidak ada riwayat berkas pengguna yang dikirim ke server luar.
+2. **Server Virtual di Memori (Mock Document Server)**  
+   Biasanya editor ONLYOFFICE butuh server terpisah yang rumit dan mahal. Di RAZ Office, kami membuat server virtual (`utils/editor/server.ts`) yang langsung hidup di dalam browser. Jadi iframe editor mengira sedang terhubung ke server sungguhan, padahal semuanya berjalan lokal.
+
+3. **Penyimpanan Riwayat File (Recent Files)**  
+   Daftar file yang pernah kamu buka disimpan menggunakan database internal browser (**IndexedDB**). Jadi saat kamu buka kembali aplikasi, file-file terakhir langsung muncul di dashboard tanpa ribet dicari ulang.
 
 ---
 
-## 5. Tata Tertib Modifikasi Kode (Protokol RAZ)
-1. **Wajib Backup Terpusat:** Sebelum mengubah file eksisting apa pun, simpan salinannya ke folder `backup/`.
-2. **Penamaan File Awalan `RAZ`:** Seluruh berkas baru wajib memakai nama dengan prefiks `RAZ`.
-3. **Komentar Edukatif:** Berikan penjelasan berbahasa Indonesia di setiap blok kode logika.
-4. **Hanya Custom Modals:** Dilarang menggunakan dialog `window.alert()` atau `window.confirm()`. Gunakan modal kustom sesuai tema.
-5. **Zero Dummy Data:** Hindari teks palsu yang tidak dinamis.
+## 🛡️ Standar & Aturan Coding Tim RAZ
+Bagi developer yang mau nambahin fitur atau edit kode di proyek ini, yuk ikuti kebiasaan baik berikut:
+1. **Selalu Backup File Dulu:** Simpan salinan file ke folder `backup/` sebelum diedit.
+2. **Awalan Nama File `RAZ`:** Beri nama dengan prefix `RAZ` untuk setiap file baru yang kamu buat.
+3. **Gunakan Custom Modal:** Jangan pakai popup bawaan browser yang kaku (`alert` atau `confirm`). Gunakan modal cantik sesuai tema website.
+4. **Komentar yang Membantu:** Tulis komentar penjelasan di kode dengan bahasa yang mudah dimengerti developer lain.
+5. **No Data Palsu (Zero Dummy Data):** Pastikan semua data bersifat dinamis dan beneran berfungsi.
