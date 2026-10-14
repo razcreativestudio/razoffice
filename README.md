@@ -34,6 +34,8 @@ Yang paling penting: **100% Local-First & Aman**. File kamu nggak pernah di-uplo
 ## ✨ Fitur Unggulan
 
 - 📂 **Dukungan Format Lengkap**: Buka dan edit file Word (`.docx`, `.doc`), Excel (`.xlsx`, `.xls`), PowerPoint (`.pptx`, `.ppt`), serta file PDF.
+- ✍️ **Koleksi Font Melimpah (>1000 Font) & Times New Roman Default**: Pilihan lebih dari 1000 font populer (Windows, Mac, Google Fonts) dengan font standar Times New Roman aktif secara default.
+- 📐 **Preset Ukuran Kertas Lengkap (Termasuk F4 / Folio)**: Dukungan langsung untuk ukuran kertas umum perkantoran Indonesia (F4 / Folio 21,5 × 33 cm), Executive, A4, A5, A6, B4, B5, US Letter, US Legal, dll.
 - 🔒 **Privasi Terjamin (Local-First)**: Dokumen diproses secara lokal di browser kamu, no tracking & no cloud upload.
 - ⚡ **Super Cepat & Ringan**: Dibangun pakai Next.js 16 (Turbopack) & Tailwind CSS v4, loading kilat tanpa lag.
 - 💾 **Riwayat File Otomatis**: Dilengkapi penyimpanan lokal (IndexedDB) supaya file yang baru kamu buka gampang dibuka kembali.

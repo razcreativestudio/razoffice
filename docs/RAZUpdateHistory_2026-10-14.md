@@ -2,7 +2,7 @@
 
 **Tanggal:** 14 Oktober 2026  
 **Penanggung Jawab:** Antigravity AI Engine  
-**Versi Aplikasi:** 0.1.2 (RAZ Office Luxury Gold Branding)
+**Versi Aplikasi:** 0.1.3 (Times New Roman Default, 1000+ Fonts & F4/Folio Paper Size)
 
 ---
 
@@ -62,3 +62,19 @@
      - `backup/app_main_layout.tsx.bak`
      - `backup/messages_id.json.bak2`
      - `backup/messages_en.json.bak2`
+
+7. **Pembaruan Tipografi & Ukuran Kertas Editor Dokumen:**
+   - **Font Default "Times New Roman" (12pt):**
+     - Menjadikan `Times New Roman` sebagai font default otomatis pada konfigurasi DocsAPI `editorConfig.customization.font`.
+     - Mem-bypass pemeriksaan lisensi komersial ONLYOFFICE (`customization.font`) di dalam `app.js` agar font default langsung aktif tanpa modal peringatan.
+     - Menetapkan nilai awal `value: "Times New Roman"` pada komponen `cmbFontName`.
+   - **Ekspansi Pilihan Font (>1000 Jenis Font Populer & Umum):**
+     - Menginjeksi 1000+ font standar dunia ke dalam `Common.Controllers.Fonts` dan `Common.Collections.Fonts` (mencakup font Microsoft Windows, Apple macOS, Google Fonts, dan font modern seperti Inter, Plus Jakarta Sans, Poppins, Roboto, Montserrat, dll).
+     - Mengoptimalkan metode `updateVisibleFontsTiles` dan `getImageUri` pada `ComboBoxFonts`: Font yang tidak memiliki thumbnail bawaan dirender langsung secara dinamis melalui HTML5 Canvas menggunakan font asli masing-masing dengan pratinjau teks yang tajam dan mulus.
+     - Menambahkan preconnect dan stylesheet Google Fonts ke dalam `<head>` di `documenteditor/main/index.html` untuk memastikan font modern web langsung tersedia di browser.
+   - **Penambahan Pilihan Ukuran Kertas (Layout > Paper Size):**
+     - Menambahkan opsi **F4 / Folio (21,5 × 33 cm)** yang umum digunakan di instansi dan perkantoran Indonesia ke menu preset ukuran kertas toolbar.
+     - Menambahkan ukuran standar lainnya: **Executive (18,41 × 26,67 cm)**, **A6 (10,5 × 14,8 cm)**, dan **B4 (25 × 35,3 cm)**.
+   - **Sistem Modularisasi & Backup:**
+     - Menyediakan file bundle editor lokal `public/v9.3.0.24-1/web-apps/apps/documenteditor/main/app.js` yang terintegrasi langsung dengan RequireJS.
+     - Mengamankan backup `backup/index.html.bak` dan `backup/page.tsx.bak`.

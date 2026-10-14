@@ -1,10 +1,10 @@
 /**
  * Halaman: Engine Editor Dokumen (Virtual ONLYOFFICE Bridge)
  * Lokasi: app/editor/page.tsx
- * Diperbarui: 13 Oktober 2026
+ * Diperbarui: 14 Oktober 2026
  * Penulis: RAZ Enterprise Core Team
  * Deskripsi: Halaman inti penyunting dokumen RAZ Office. Menginisialisasi iframe editor
- * ONLYOFFICE Web-Apps dan menghubungkannya dengan EditorServer virtual berbasis WebAssembly (x2t).
+ * ONLYOFFICE Web-Apps dengan default font Times New Roman 12pt, koleksi 1000+ font, dan dukungan ukuran kertas F4.
  */
 
 "use client";
@@ -142,6 +142,10 @@ export default function Page() {
           },
           customization: {
             uiTheme: uiTheme,
+            font: {
+              name: "Times New Roman",
+              size: "12pt",
+            },
             features: {
               spellcheck: {
                 change: false,
