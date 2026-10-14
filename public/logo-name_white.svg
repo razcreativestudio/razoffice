@@ -1,10 +1,33 @@
-<svg width="180" height="32" viewBox="0 0 180 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Ikon Kotak Membulat R -->
-  <rect x="2" y="2" width="28" height="28" rx="8" fill="#3B82F6"/>
-  <!-- Huruf R Putih -->
-  <rect x="8" y="8" width="4" height="16" rx="1.5" fill="white"/>
-  <path d="M8 8H17C19.7614 8 22 9.79086 22 12C22 14.2091 19.7614 16 17 16H12V8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M16 16L21 23" stroke="#FB923C" stroke-width="3.5" stroke-linecap="round"/>
-  <!-- Teks RAZ OFFICE Putih -->
-  <text x="36" y="22" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="900" letter-spacing="1.5" fill="#F8FAFC">RAZ OFFICE</text>
+<svg width="200" height="34" viewBox="0 0 200 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="razGoldNameWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8E4A7" />
+      <stop offset="30%" stop-color="#DCB466" />
+      <stop offset="65%" stop-color="#C2943A" />
+      <stop offset="100%" stop-color="#A17424" />
+    </linearGradient>
+    <linearGradient id="razGoldIconWhite" x1="15%" y1="10%" x2="85%" y2="90%">
+      <stop offset="0%" stop-color="#FCEBB6" />
+      <stop offset="30%" stop-color="#E2BE74" />
+      <stop offset="65%" stop-color="#C99D43" />
+      <stop offset="100%" stop-color="#9E7324" />
+    </linearGradient>
+  </defs>
+
+  <!-- Ikon Tumpukan Dokumen Isometrik Emas -->
+  <svg x="2" y="1" width="32" height="32" viewBox="0 0 256 256">
+    <g stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 72 141 L 46 156 L 122 198 L 206 151 L 182 138" stroke="url(#razGoldIconWhite)" stroke-width="12"/>
+      <path d="M 72 123 L 46 138 L 122 180 L 206 133 L 182 120" stroke="url(#razGoldIconWhite)" stroke-width="12"/>
+      <path d="M 72 105 L 46 120 L 122 162 L 206 115 L 182 102" stroke="url(#razGoldIconWhite)" stroke-width="12"/>
+      <path d="M 46 102 L 134 52 L 180 79 L 180 112 L 122 144 Z" stroke="url(#razGoldIconWhite)" stroke-width="12"/>
+      <path d="M 180 79 L 206 94 L 206 112 L 180 112" stroke="url(#razGoldIconWhite)" stroke-width="12"/>
+    </g>
+  </svg>
+
+  <!-- Wordmark RAZ Office Sesuai Referensi Gambar Pengguna -->
+  <text x="40" y="24" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, 'Montserrat', sans-serif" fill="url(#razGoldNameWhite)">
+    <tspan font-size="20" font-weight="900" letter-spacing="1">RAZ </tspan>
+    <tspan font-size="20" font-weight="300" letter-spacing="0.5">Office</tspan>
+  </text>
 </svg>

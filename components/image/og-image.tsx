@@ -7,7 +7,7 @@ interface OgImageProps {
   subtitle?: string;
 }
 
-const ORANGE = "#FF5900";
+const ORANGE = "#C4963C";
 const LOGO_PATH = path.join(process.cwd(), "public", "logo.png");
 
 let logoDataUri = "";
@@ -87,17 +87,17 @@ export const OgImage = async ({
                 width: "52px",
                 height: "52px",
                 borderRadius: "14px",
-                background: `linear-gradient(135deg, ${ORANGE} 0%, #FF8C40 100%)`,
+                background: `linear-gradient(135deg, #F8E5A8 0%, ${ORANGE} 50%, #9C7122 100%)`,
               }}
             >
-              <span tw="text-white text-3xl font-black">R</span>
+              <span tw="text-black text-2xl font-black">R</span>
             </div>
           )}
           <span
-            tw="ml-4 text-3xl font-bold text-white"
+            tw="ml-4 text-3xl font-black text-white"
             style={{ letterSpacing: "-0.02em" }}
           >
-            RAZ Office
+            <span style={{ color: "#F8E5A8" }}>RAZ </span>Office
           </span>
         </div>
 

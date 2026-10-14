@@ -23,12 +23,17 @@ export function AboutView() {
     <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 py-4">
       {/* Hero Bagian Atas */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-24 h-24 bg-primary/10 rounded-3xl mb-2 shadow-lg shadow-primary/10">
-          <Logo className="w-16 h-16" />
+        <div className="inline-flex items-center justify-center w-28 h-28 bg-amber-500/10 border border-amber-500/20 rounded-3xl mb-2 shadow-xl shadow-amber-500/5 transition-transform hover:scale-105">
+          <Logo className="w-20 h-20" />
         </div>
-        <h1 className="text-4xl font-extrabold tracking-tight uppercase bg-linear-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-          {RAZ_CONFIG.appName}
-        </h1>
+        <div className="flex items-baseline justify-center gap-2">
+          <span className="text-4xl sm:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600">
+            RAZ
+          </span>
+          <span className="text-4xl sm:text-5xl font-light tracking-wide text-foreground">
+            Office
+          </span>
+        </div>
         <p className="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
           {RAZ_CONFIG.description}
         </p>

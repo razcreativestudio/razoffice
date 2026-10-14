@@ -1,9 +1,10 @@
 /**
  * Komponen: Logo (SVG)
  * Lokasi: components/svg/Logo.tsx
- * Diperbarui: 13 Oktober 2026
+ * Diperbarui: 14 Oktober 2026
  * Penulis: RAZ Enterprise Core Team
- * Deskripsi: Komponen SVG Logo resmi RAZ Office dengan ikon huruf R geometris dan aksen dokumen dinamis.
+ * Deskripsi: Komponen SVG Logo resmi RAZ Office berbasis tumpukan dokumen isometrik emas metalik (4 lapis)
+ * dengan lipatan sudut elegan pada lembar utama teratas.
  */
 
 import * as React from "react";
@@ -17,39 +18,51 @@ const SvgLogo = (props: SVGProps<SVGSVGElement>) => (
     {...props}
   >
     <defs>
-      <linearGradient id="razGradientBg" x1="20" y1="20" x2="236" y2="236" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#2563EB" />
-        <stop offset="100%" stopColor="#1D4ED8" />
-      </linearGradient>
-      <linearGradient id="razAccent" x1="80" y1="60" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#F97316" />
-        <stop offset="100%" stopColor="#EA580C" />
+      <linearGradient id="razGoldComponent" x1="15%" y1="10%" x2="85%" y2="90%">
+        <stop offset="0%" stopColor="#F8E5A8" />
+        <stop offset="25%" stopColor="#DEB76A" />
+        <stop offset="50%" stopColor="#C4963C" />
+        <stop offset="75%" stopColor="#EED792" />
+        <stop offset="100%" stopColor="#9C7122" />
       </linearGradient>
     </defs>
 
-    {/* Latar Belakang Kotak Membulat Modern */}
-    <rect x="24" y="24" width="208" height="208" rx="52" fill="url(#razGradientBg)" />
+    <g strokeLinecap="round" strokeLinejoin="round">
+      {/* Lembar 4 (Paling Bawah) */}
+      <path
+        d="M 72 141 L 46 156 L 122 198 L 206 151 L 182 138"
+        stroke="url(#razGoldComponent)"
+        strokeWidth={7}
+      />
 
-    {/* Lipatan Dokumen Elegan */}
-    <path d="M168 24L232 88H184C175.163 88 168 80.8366 168 72V24Z" fill="white" fillOpacity={0.25} />
+      {/* Lembar 3 (Lapisan Ketiga) */}
+      <path
+        d="M 72 123 L 46 138 L 122 180 L 206 133 L 182 120"
+        stroke="url(#razGoldComponent)"
+        strokeWidth={7}
+      />
 
-    {/* Batang Tegak Huruf R */}
-    <rect x="68" y="72" width="26" height="112" rx="10" fill="white" />
+      {/* Lembar 2 (Lapisan Kedua) */}
+      <path
+        d="M 72 105 L 46 120 L 122 162 L 206 115 L 182 102"
+        stroke="url(#razGoldComponent)"
+        strokeWidth={7}
+      />
 
-    {/* Busur Atas Huruf R */}
-    <path
-      d="M68 72H134C156.091 72 172 86.3269 172 106C172 125.673 156.091 140 134 140H94V72"
-      stroke="white"
-      strokeWidth={26}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+      {/* Lembar 1 (Lembar Utama Atas) */}
+      <path
+        d="M 46 102 L 134 52 L 180 79 L 180 112 L 122 144 Z"
+        stroke="url(#razGoldComponent)"
+        strokeWidth={7}
+      />
 
-    {/* Kaki Aksen Oranye Huruf R */}
-    <path d="M124 134L174 184" stroke="url(#razAccent)" strokeWidth={26} strokeLinecap="round" />
-
-    {/* Aksen Dot */}
-    <circle cx="186" cy="184" r="8" fill="#FDBA74" />
+      {/* Lipatan Sudut Kanan Atas */}
+      <path
+        d="M 180 79 L 206 94 L 206 112 L 180 112"
+        stroke="url(#razGoldComponent)"
+        strokeWidth={7}
+      />
+    </g>
   </svg>
 );
 

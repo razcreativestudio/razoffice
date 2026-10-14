@@ -62,26 +62,26 @@ export function Header({ children }: PropsWithChildren<{ className?: string }>) 
     <header className="h-16 flex items-center justify-between px-4 z-20 w-full shrink-0 border-b border-border/40 bg-background/80 backdrop-blur-md">
       {/* Brand & Logo RAZ Office */}
       <div
-        className="flex items-center gap-3 cursor-pointer select-none"
+        className="flex items-center gap-3 cursor-pointer select-none group"
         onClick={() => router.push("/")}
         title="Kembali ke Beranda RAZ Office"
       >
-        <div className="flex items-center justify-center p-1 rounded-xl bg-primary/10">
+        <div className="flex items-center justify-center p-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 shadow-xs transition-transform group-hover:scale-105">
           <Image
             width={34}
             height={34}
             src="/logo.svg"
-            className="w-8 h-8 rounded-lg"
+            className="w-8 h-8 drop-shadow-xs"
             alt={`${RAZ_CONFIG.appName} Logo`}
             priority
           />
         </div>
-        <div className="flex flex-col">
-          <h1 className="text-lg font-black tracking-wider text-foreground uppercase">
-            {RAZ_CONFIG.appName}
-          </h1>
-          <span className="text-[10px] font-semibold text-primary -mt-1 tracking-widest uppercase">
-            Enterprise Suite
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600">
+            RAZ
+          </span>
+          <span className="text-xl font-light tracking-wide text-foreground">
+            Office
           </span>
         </div>
       </div>

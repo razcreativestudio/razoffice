@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* --primary: #b7472a; */
-  --primary: hsl(12, 65%, 50%);
+  /* Warna primer emas metalik khas RAZ Office */
+  --primary: hsl(40, 68%, 46%);
   --primary-foreground: oklch(0.985 0 0);
   --sidebar-bg: #ffffff;
   --sidebar-hover: #f3f2f1;
@@ -101,8 +101,8 @@ body {
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: hsl(12, 80%, 60%);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary: hsl(42, 85%, 55%);
+  --primary-foreground: oklch(0.12 0 0);
   --secondary: hsl(12, 15%, 25%);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: hsl(12, 10%, 20%);

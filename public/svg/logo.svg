@@ -1,35 +1,50 @@
 <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Definisi Gradien RAZ Enterprise -->
+  <!-- Definisi Gradien Emas Metalik Khas RAZ Office -->
   <defs>
-    <linearGradient id="razGradientBg" x1="20" y1="20" x2="236" y2="236" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#2563EB"/>
-      <stop offset="100%" stop-color="#1D4ED8"/>
+    <linearGradient id="razGold" x1="15%" y1="10%" x2="85%" y2="90%">
+      <stop offset="0%" stop-color="#F8E5A8" />
+      <stop offset="25%" stop-color="#DEB76A" />
+      <stop offset="50%" stop-color="#C4963C" />
+      <stop offset="75%" stop-color="#EED792" />
+      <stop offset="100%" stop-color="#9C7122" />
     </linearGradient>
-    <linearGradient id="razAccent" x1="80" y1="60" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#F97316"/>
-      <stop offset="100%" stop-color="#EA580C"/>
-    </linearGradient>
-    <filter id="razShadow" x="10" y="10" width="236" height="240" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#1E3A8A" flood-opacity="0.25"/>
-    </filter>
   </defs>
 
-  <!-- Latar Belakang Kotak Membulat Modern -->
-  <rect x="24" y="24" width="208" height="208" rx="52" fill="url(#razGradientBg)" filter="url(#razShadow)"/>
+  <!-- Grup Ikon Tumpukan Dokumen Isometrik (4 Lembar) -->
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <!-- Lembar 4 (Paling Bawah) -->
+    <path
+      d="M 72 141 L 46 156 L 122 198 L 206 151 L 182 138"
+      stroke="url(#razGold)"
+      stroke-width="7"
+    />
 
-  <!-- Lipatan Dokumen Elegan di Sudut Kanan Atas -->
-  <path d="M168 24L232 88H184C175.163 88 168 80.8366 168 72V24Z" fill="white" fill-opacity="0.25"/>
+    <!-- Lembar 3 (Lapisan Ketiga) -->
+    <path
+      d="M 72 123 L 46 138 L 122 180 L 206 133 L 182 120"
+      stroke="url(#razGold)"
+      stroke-width="7"
+    />
 
-  <!-- Huruf R Bergaya Enterprise Modern -->
-  <!-- Batang Tegak Kiri -->
-  <rect x="68" y="72" width="26" height="112" rx="10" fill="white"/>
+    <!-- Lembar 2 (Lapisan Kedua) -->
+    <path
+      d="M 72 105 L 46 120 L 122 162 L 206 115 L 182 102"
+      stroke="url(#razGold)"
+      stroke-width="7"
+    />
 
-  <!-- Busur Kepala Huruf R Atas -->
-  <path d="M68 72H134C156.091 72 172 86.3269 172 106C172 125.673 156.091 140 134 140H94V72" stroke="white" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Lembar 1 (Lembar Utama Atas dengan Sudut Terlipat) -->
+    <path
+      d="M 46 102 L 134 52 L 180 79 L 180 112 L 122 144 Z"
+      stroke="url(#razGold)"
+      stroke-width="7"
+    />
 
-  <!-- Kaki Dinamis Huruf R dengan Aksen Enerjik RAZ -->
-  <path d="M124 134L174 184" stroke="url(#razAccent)" stroke-width="26" stroke-linecap="round"/>
-
-  <!-- Titik Aksen Oranye RAZ -->
-  <circle cx="186" cy="184" r="8" fill="#FDBA74"/>
+    <!-- Lipatan Sudut Kanan Atas (Dog-Ear Flap) -->
+    <path
+      d="M 180 79 L 206 94 L 206 112 L 180 112"
+      stroke="url(#razGold)"
+      stroke-width="7"
+    />
+  </g>
 </svg>
