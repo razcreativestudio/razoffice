@@ -3,10 +3,10 @@
  * Lokasi: components/main/open-view.tsx
  * Diperbarui: 14 Oktober 2026
  * Penulis: RAZ Enterprise Core Team
- * Deskripsi: Halaman beranda utama RAZ Office dengan antarmuka enterprise modern.
- * Memuat banner sambutan, area drag-and-drop dokumen lokal, kartu pembuatan dokumen baru
- * (Word, Excel, PowerPoint, PDF), rekomendasi templat profesional, serta daftar dokumen riwayat
- * berbasis IndexedDB lokal yang dilengkapi dialog konfirmasi kustom RAZModal.
+ * Deskripsi: Halaman beranda utama RAZ Office dengan antarmuka modern, humanis, dan bilingual-friendly.
+ * Dilengkapi banner sambutan, area drag-and-drop file lokal, kartu aksi cepat dokumen baru
+ * (Word, Excel, PowerPoint, PDF), rekomendasi templat pilihan, serta riwayat file lokal (IndexedDB)
+ * dengan dialog konfirmasi kustom RAZModal.
  */
 
 "use client";
@@ -24,9 +24,8 @@ import {
   ArrowRight,
   Plus,
   ShieldCheck,
-  Cpu,
+  Zap,
   Layers,
-  FileText,
 } from "lucide-react";
 import { useExtracted } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -54,7 +53,7 @@ export function OpenView({
   recommendedTemplates: Template[];
 }) {
   const t = useExtracted();
-  usePageTitle(`${RAZ_CONFIG.appName} — Suite Editor Dokumen Web (Word, Excel, PowerPoint)`);
+  usePageTitle(`${RAZ_CONFIG.appName} — Modern Office Web Suite (Word, Excel, PowerPoint)`);
   const [recentFiles, setRecentFiles] = useState<RecentFileRecord[]>([]);
   const [fileToDelete, setFileToDelete] = useState<RecentFileRecord | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -64,7 +63,7 @@ export function OpenView({
   const router = useRouter();
   const server = useAppStore((state) => state.server);
 
-  // Memuat daftar berkas riwayat dari IndexedDB saat komponen pertama kali dimuat
+  // Ambil data file terakhir yang pernah dibuka dari penyimpanan lokal (IndexedDB)
   useEffect(() => {
     loadRecentFiles();
   }, []);
@@ -75,13 +74,13 @@ export function OpenView({
       const files = await getRecentFiles();
       setRecentFiles(files);
     } catch (error) {
-      console.error("Gagal memuat berkas terbaru:", error);
+      console.error("Gagal memuat riwayat file:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Membuka berkas yang ada di riwayat menggunakan handle yang tersimpan
+  // Buka kembali file yang ada di riwayat
   const handleRecentFileClick = async (record: RecentFileRecord) => {
     try {
       const file = await openRecentFile(record);
@@ -91,12 +90,12 @@ export function OpenView({
         await loadRecentFiles();
       }
     } catch (error) {
-      console.error("Gagal membuka kembali file riwayat:", error);
+      console.error("Gagal membuka file riwayat:", error);
       await loadRecentFiles();
     }
   };
 
-  // Membuka templat dokumen bawaan
+  // Buka templat dokumen bawaan
   const handleTemplateClick = async (tpl: Template) => {
     if (loadingTemplate) return;
     setLoadingTemplate(tpl.name);
@@ -111,13 +110,13 @@ export function OpenView({
     }
   };
 
-  // Membuka modal konfirmasi kustom RAZModal saat pengguna menekan tombol hapus riwayat
+  // Siapkan konfirmasi modal sebelum hapus riwayat
   const handlePromptRemoveRecentFile = (e: React.MouseEvent, file: RecentFileRecord) => {
     e.stopPropagation();
     setFileToDelete(file);
   };
 
-  // Mengeksekusi penghapusan dari IndexedDB setelah dikonfirmasi pengguna
+  // Eksekusi penghapusan dari IndexedDB setelah disetujui user di modal
   const handleConfirmRemoveRecentFile = async () => {
     if (!fileToDelete) return;
     setIsDeleting(true);
@@ -132,7 +131,7 @@ export function OpenView({
     }
   };
 
-  // Membuka berkas dan beralih ke editor dokumen
+  // Handler buka file dan pindah ke halaman editor
   const handleFileSelectWithHandle = async (
     file: File,
     handle?: FileSystemFileHandle,
@@ -142,7 +141,7 @@ export function OpenView({
         await addRecentFile(handle);
         await loadRecentFiles();
       } catch (error) {
-        console.error("Gagal menyimpan ke riwayat berkas:", error);
+        console.error("Gagal menyimpan ke riwayat file:", error);
       }
     }
 
@@ -150,40 +149,44 @@ export function OpenView({
     router.push("/editor");
   };
 
-  // Konfigurasi jenis dokumen baru dengan deskripsi mendalam
+  // Konfigurasi kartu dokumen dengan copy yang santai, modern, dan jelas
   const newDocItems = [
     {
       type: "docx",
-      title: "Dokumen Teks",
-      badge: "Word (.docx)",
-      description: "Surat resmi, laporan bisnis, artikel, dan proposal proyek",
+      title: "Word Document",
+      badge: ".docx",
+      actionLabel: "Create New",
+      description: "Bikin surat, artikel, proposal kerja, atau draft dokumen",
       colorClass: "hover:border-blue-500/50 hover:shadow-blue-500/5",
       accentBg: "group-hover:bg-blue-500/10",
       accentText: "text-blue-500",
     },
     {
       type: "xlsx",
-      title: "Lembar Sebar",
-      badge: "Excel (.xlsx)",
-      description: "Tabel data, kalkulasi otomatis, dan pembukuan keuangan",
+      title: "Excel Spreadsheet",
+      badge: ".xlsx",
+      actionLabel: "Create New",
+      description: "Olah data tabel, kelola keuangan, dan kalkulasi otomatis",
       colorClass: "hover:border-emerald-500/50 hover:shadow-emerald-500/5",
       accentBg: "group-hover:bg-emerald-500/10",
       accentText: "text-emerald-500",
     },
     {
       type: "pptx",
-      title: "Slide Presentasi",
-      badge: "PowerPoint (.pptx)",
-      description: "Dek slide visual, presentasi ide, dan materi pelatihan",
+      title: "PowerPoint Slides",
+      badge: ".pptx",
+      actionLabel: "Create New",
+      description: "Desain slide presentasi, materi pitch deck, atau ide visual",
       colorClass: "hover:border-amber-500/50 hover:shadow-amber-500/5",
       accentBg: "group-hover:bg-amber-500/10",
       accentText: "text-amber-500",
     },
     {
       type: "pdf",
-      title: "Dokumen PDF",
-      badge: "Acrobat (.pdf)",
-      description: "Formulir interaktif, anotasi, dan berkas siap cetak",
+      title: "PDF & Forms",
+      badge: ".pdf",
+      actionLabel: "Open PDF",
+      description: "Buka, review, isi formulir, atau cek berkas siap cetak",
       colorClass: "hover:border-rose-500/50 hover:shadow-rose-500/5",
       accentBg: "group-hover:bg-rose-500/10",
       accentText: "text-rose-500",
@@ -192,63 +195,61 @@ export function OpenView({
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* 1. Header Sambutan Enterprise */}
+      {/* 1. Banner Sambutan Modern & Ramah */}
       <section className="relative overflow-hidden rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card/60 to-background p-6 sm:p-8">
         <div className="absolute -top-16 -right-16 w-48 h-48 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="max-w-2xl space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-primary/15 text-primary border border-primary/30">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Suite Perkantoran Web Enterprise</span>
+              <span>Modern Office Workspace</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-              Selamat Datang di <span className="text-primary">{RAZ_CONFIG.appName}</span>
+              Welcome to <span className="text-primary">{RAZ_CONFIG.appName}</span>!
             </h1>
             <p className="text-sm text-text-secondary leading-relaxed">
-              Buka, sunting, dan kelola dokumen Word, Excel, PowerPoint, serta PDF langsung di peramban Anda.
-              Bekerja lebih cepat dan aman dengan jaminan privasi lokal 100% tanpa risiko kebocoran data cloud.
+              Edit, buat, dan kelola dokumen Word, Excel, PowerPoint, serta PDF langsung di browsermu — 100% private, cepat, dan tanpa perlu upload ke cloud.
             </p>
           </div>
 
           <div className="flex flex-wrap md:flex-col gap-2 shrink-0">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-card/80 border border-border text-xs text-text-secondary">
               <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span className="font-medium">100% Local-First & Privat</span>
+              <span className="font-medium">100% Local & Private</span>
             </div>
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-card/80 border border-border text-xs text-text-secondary">
-              <Cpu className="w-4 h-4 text-primary" />
-              <span className="font-medium">Engine WebAssembly x2t</span>
+              <Zap className="w-4 h-4 text-primary" />
+              <span className="font-medium">Fast & Lightweight</span>
             </div>
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-card/80 border border-border text-xs text-text-secondary">
               <Layers className="w-4 h-4 text-blue-500" />
-              <span className="font-medium">Standar RAZ Enterprise</span>
+              <span className="font-medium">Enterprise Edition</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Kartu Pengunggah Berkas (FilePickerCard Dropzone) */}
+      {/* 2. Kartu Pengunggah File (FilePickerCard Dropzone) */}
       <section>
         <FilePickerCard onFileSelectWithHandle={handleFileSelectWithHandle} />
       </section>
 
-      {/* 3. Hub Pembuatan Dokumen Baru */}
+      {/* 3. Hub Dokumen Baru */}
       <section>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Plus className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-bold tracking-tight text-foreground">
-              {t("Baru") || "Buat Dokumen Baru"}
+              New Document
             </h2>
           </div>
-          <span className="text-xs text-text-secondary">
-            Pilih jenis dokumen untuk mulai menyunting langsung
+          <span className="text-xs text-text-secondary hidden sm:inline-block">
+            Pilih format dokumen untuk langsung mulai kerja
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {newDocItems.map(({ type, title, badge, description, colorClass, accentBg, accentText }) => {
-            const doc = getDocConfig(type);
+          {newDocItems.map(({ type, title, badge, actionLabel, description, colorClass, accentBg }) => {
             return (
               <Link
                 key={type}
@@ -271,13 +272,13 @@ export function OpenView({
                   <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
                     {title}
                   </h3>
-                  <p className="mt-1 text-xs text-text-secondary leading-relaxed">
+                  <p className="mt-1.5 text-xs text-text-secondary leading-relaxed">
                     {description}
                   </p>
                 </div>
 
                 <div className="mt-5 pt-3 border-t border-border/50 flex items-center justify-between text-xs font-semibold text-text-secondary group-hover:text-primary transition-colors">
-                  <span>Buat Sekarang</span>
+                  <span>{actionLabel}</span>
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </Link>
@@ -292,14 +293,14 @@ export function OpenView({
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-bold tracking-tight text-foreground">
-              {t("Recommended") || "Templat Unggulan"}
+              Recommended Templates
             </h2>
           </div>
           <button
             onClick={() => router.push("/template")}
             className="inline-flex items-center gap-1.5 text-xs text-primary font-semibold hover:underline cursor-pointer"
           >
-            <span>{t("More templates") || "Jelajahi Semua Templat"}</span>
+            <span>Explore All Templates</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -350,18 +351,18 @@ export function OpenView({
         </div>
       </section>
 
-      {/* 5. Riwayat Dokumen Terbaru */}
+      {/* 5. Riwayat File Terakhir Dibuka */}
       <section>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-bold tracking-tight text-foreground">
-              {t("Recent") || "Dokumen Terbaru"}
+              Recent Files
             </h2>
           </div>
           {recentFiles.length > 0 && (
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-semibold border border-primary/20">
-              {recentFiles.length} Berkas Tersimpan
+              {recentFiles.length} files saved
             </span>
           )}
         </div>
@@ -370,7 +371,7 @@ export function OpenView({
           <div className="bg-card/50 border border-border rounded-2xl p-12 flex items-center justify-center shadow-xs">
             <div className="text-center text-text-secondary">
               <Clock className="w-8 h-8 mx-auto mb-2 animate-pulse text-primary" />
-              <p className="text-sm font-medium">{t("Loading recent files...") || "Memuat dokumen terbaru..."}</p>
+              <p className="text-sm font-medium">Loading recent files...</p>
             </div>
           </div>
         ) : recentFiles.length === 0 ? (
@@ -379,11 +380,10 @@ export function OpenView({
               <FolderOpen className="w-7 h-7" />
             </div>
             <h3 className="text-sm font-bold text-foreground mb-1">
-              {t("No recent files") || "Belum Ada Riwayat Dokumen"}
+              Belum Ada Recent Files
             </h3>
             <p className="text-xs text-text-secondary max-w-sm mb-4 leading-relaxed">
-              {t("Files you open will appear here for quick access") ||
-                "Dokumen yang Anda buka atau sunting akan otomatis tercatat di sini untuk akses kilat kapan pun."}
+              File yang kamu buka atau buat bakal otomatis muncul di sini supaya gampang kamu akses lagi kapan saja.
             </p>
           </div>
         ) : (
@@ -393,7 +393,7 @@ export function OpenView({
                 key={file.path}
                 onClick={() => handleRecentFileClick(file)}
                 className="w-full flex items-center justify-between px-5 py-4 hover:bg-primary/[0.04] transition-colors group cursor-pointer"
-                title={t("Click to reopen this file") || "Klik untuk membuka kembali file ini"}
+                title="Klik untuk membuka kembali file ini"
               >
                 <div className="flex items-center gap-4 min-w-0">
                   <div className="shrink-0 p-1.5 rounded-lg bg-card border border-border/60 group-hover:border-primary/40 transition-colors">
@@ -414,7 +414,7 @@ export function OpenView({
                   <button
                     onClick={(e) => handlePromptRemoveRecentFile(e, file)}
                     className="opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-destructive/10 hover:text-destructive text-text-secondary rounded-lg cursor-pointer"
-                    title={t("Remove from recent") || "Hapus dari riwayat"}
+                    title="Remove from recent"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -425,16 +425,16 @@ export function OpenView({
         )}
       </section>
 
-      {/* Modal Dialog Kustom Konfirmasi Penghapusan Riwayat Dokumen */}
+      {/* Modal Dialog Kustom Konfirmasi Hapus Riwayat */}
       <RAZModal
         isOpen={Boolean(fileToDelete)}
         onClose={() => setFileToDelete(null)}
         onConfirm={handleConfirmRemoveRecentFile}
         variant="danger"
-        title="Hapus dari Riwayat Dokumen"
-        description={`Apakah Anda yakin ingin menghapus "${fileToDelete?.name}" dari daftar dokumen terbaru? Berkas asli di penyimpanan lokal Anda tidak akan terhapus.`}
-        confirmText="Hapus dari Riwayat"
-        cancelText="Batal"
+        title="Remove from Recent?"
+        description={`Kamu yakin mau menghapus "${fileToDelete?.name}" dari daftar riwayat? File asli di perangkatmu tetap aman.`}
+        confirmText="Remove"
+        cancelText="Cancel"
         isLoading={isDeleting}
       />
     </div>

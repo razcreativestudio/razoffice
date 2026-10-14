@@ -3,15 +3,14 @@
  * Lokasi: components/file-picker-card.tsx
  * Diperbarui: 14 Oktober 2026
  * Penulis: RAZ Enterprise Core Team
- * Deskripsi: Area dropzone interaktif berdesain enterprise untuk memilih dan membuka dokumen
- * lokal (DOCX, XLSX, PPTX, PDF) menggunakan File System Access API modern dan fallback input standar.
- * Menjamin 100% pemrosesan privat lokal tanpa pengunggahan berkas ke server luar.
+ * Deskripsi: Area dropzone interaktif berdesain modern dengan paduan bahasa yang luwes & ramah.
+ * Mendukung pembukaan dokumen Word, Excel, PowerPoint, dan PDF secara lokal (Local-First).
  */
 
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { Upload, FileUp, ShieldCheck, FolderOpen, Sparkles } from "lucide-react";
+import { Upload, FileUp, ShieldCheck, FolderOpen } from "lucide-react";
 import { useExtracted } from "next-intl";
 
 interface FilePickerCardProps {
@@ -30,19 +29,18 @@ export function FilePickerCard({
   const [isDragOver, setIsDragOver] = useState(false);
   const [supportsFileSystemAPI, setSupportsFileSystemAPI] = useState(false);
 
-  // Memeriksa dukungan peramban terhadap File System Access API modern
+  // Cek dukungan File System Access API di browser
   useEffect(() => {
     if (typeof window !== "undefined" && "showOpenFilePicker" in window) {
       setSupportsFileSystemAPI(true);
     }
   }, []);
 
-  // Membuka jendela dialog pemilih berkas sistem operasi
+  // Buka file dialog sistem
   const handleClick = async () => {
     if (supportsFileSystemAPI) {
       try {
-        // Menggunakan File System Access API agar dapat menyimpan handle berkas ke IndexedDB
-        // @ts-ignore - File System Access API types
+        // @ts-ignore - File System Access API
         const [fileHandle] = await window.showOpenFilePicker({
           types: [
             {
@@ -74,17 +72,14 @@ export function FilePickerCard({
         }
         return;
       } catch (err: any) {
-        // Batalkan jika pengguna menutup modal pemilih berkas
         if (err.name === "AbortError") return;
-        console.warn("File System Access API error, beralih ke input reguler:", err);
+        console.warn("File System Access API error, fallback to standard input:", err);
       }
     }
 
-    // Fallback jika API modern tidak didukung atau terjadi kegagalan
     fileInputRef.current?.click();
   };
 
-  // Penanganan saat file dipilih melalui input HTML konvensional
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -96,7 +91,6 @@ export function FilePickerCard({
     }
   };
 
-  // Event handler drag and drop
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -141,7 +135,7 @@ export function FilePickerCard({
           }
         }
       } catch (err) {
-        console.log("Tidak dapat mengambil FileSystemHandle dari drag:", err);
+        console.log("Could not get FileSystemHandle from drag:", err);
       }
     }
 
@@ -190,15 +184,13 @@ export function FilePickerCard({
           }
         `}
       >
-        {/* Efek aksen gradasi di latar belakang */}
         <div className="absolute -top-24 -right-24 w-60 h-60 bg-primary/10 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/15 transition-colors duration-500" />
         <div className="absolute -bottom-24 -left-24 w-60 h-60 bg-primary/5 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/10 transition-colors duration-500" />
 
         <div className="relative z-10 flex flex-col items-center justify-center text-center">
-          {/* Wadah ikon berdesain elegan */}
           <div
             className={`
-              w-18 h-18 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center mb-5
+              w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center mb-4
               transition-all duration-300 shadow-md
               ${
                 isDragOver
@@ -208,51 +200,45 @@ export function FilePickerCard({
             `}
           >
             {isDragOver ? (
-              <FileUp className="w-9 h-9 sm:w-10 sm:h-10 animate-bounce" />
+              <FileUp className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce" />
             ) : (
-              <Upload className="w-8 h-8 sm:w-9 sm:h-9 transition-transform duration-300 group-hover:-translate-y-0.5" />
+              <Upload className="w-7 h-7 sm:w-9 sm:h-9 transition-transform duration-300 group-hover:-translate-y-0.5" />
             )}
           </div>
 
-          {/* Judul & Deskripsi Utama */}
           <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground mb-2">
-            {isDragOver ? t("Lepaskan berkas di sini") : t("Seret Berkas Dokumen ke Sini")}
+            {isDragOver ? "Drop file kamu di sini" : "Drag & Drop File ke Sini"}
           </h3>
 
           <p className="text-sm text-text-secondary max-w-lg mx-auto mb-5 leading-relaxed">
-            {t(
-              "Buka dan sunting dokumen Office langsung dari komputer Anda tanpa batasan ukuran dan tanpa unggah ke server pihak ketiga.",
-            )}
+            Buka dan edit dokumen Office langsung dari komputermu tanpa perlu upload ke server mana pun. Cepat, privat, dan aman.
           </p>
 
-          {/* Tombol Aksi Utama */}
-          <div className="mb-6">
+          <div className="mb-5">
             <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-primary text-black shadow-md shadow-primary/20 group-hover:bg-primary/95 group-hover:shadow-lg group-hover:shadow-primary/30 transition-all duration-200">
               <FolderOpen className="w-4 h-4" />
-              {t("Pilih Berkas dari Komputer")}
+              Browse Files from Device
             </span>
           </div>
 
-          {/* Badge Format Dokumen yang Didukung */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
             <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
-              DOCX
+              Word (.docx)
             </span>
             <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              XLSX
+              Excel (.xlsx)
             </span>
             <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-              PPTX
+              PowerPoint (.pptx)
             </span>
             <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
               PDF
             </span>
           </div>
 
-          {/* Jaminan Privasi & Keamanan */}
           <div className="flex items-center gap-1.5 text-xs text-text-secondary/80">
             <ShieldCheck className="w-4 h-4 text-primary" />
-            <span>{t("100% Privat: Berkas diproses sepenuhnya secara lokal di peramban")}</span>
+            <span>100% Local & Private: File diproses langsung di peramban tanpa kirim data ke cloud</span>
           </div>
         </div>
       </div>
