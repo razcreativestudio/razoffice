@@ -238,7 +238,7 @@ export function FilePickerCard({
 
           <div className="flex items-center gap-1.5 text-xs text-text-secondary/80">
             <ShieldCheck className="w-4 h-4 text-primary" />
-            <span>100% Local & Private: File diproses langsung di peramban tanpa kirim data ke cloud</span>
+            <span>100% Local & Private: File diproses langsung di browser tanpa kirim data ke cloud</span>
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@
 
 Proyek **RAZ Office** bertujuan mentransformasikan aplikasi office berbasis web menjadi produk berkelas, modern, dan mandiri dengan standar **RAZ Enterprise**. 
 
-Fokus utamanya adalah menghadirkan aplikasi office yang ringan, cepat, elegan, dan menjamin privasi data 100% lokal (**Local-First & Serverless**). Pengguna bisa langsung ngerjain dokumen Word, spreadsheet Excel, slide presentasi PowerPoint, serta baca PDF langsung di peramban web tanpa perlu instal software berat dan tanpa perlu langganan cloud server.
+Fokus utamanya adalah menghadirkan aplikasi office yang ringan, cepat, elegan, dan menjamin privasi data 100% lokal (**Local-First & Serverless**). Pengguna bisa langsung ngerjain dokumen Word, spreadsheet Excel, slide presentasi PowerPoint, serta baca PDF langsung di browser tanpa perlu instal software berat dan tanpa perlu langganan cloud server.
 
 ---
 

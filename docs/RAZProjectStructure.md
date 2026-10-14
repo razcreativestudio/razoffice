@@ -23,7 +23,7 @@ razoffice/
 │   │   ├── layout.tsx                # Layout khusus editor
 │   │   └── page.tsx                  # Canvas editor ONLYOFFICE
 │   ├── globals.css                   # Styling global (Tailwind CSS v4 & tema warna emas)
-│   └── layout.tsx                    # Root layout peramban
+│   └── layout.tsx                    # Root layout browser
 │
 ├── backup/                           # Folder Cadangan Kode (Sesuai Aturan GEMINI.md)
 │   └── (Semua backup file pra-modifikasi tersimpan aman di sini)

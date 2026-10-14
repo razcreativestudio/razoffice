@@ -13,7 +13,7 @@ import { RAZ_CONFIG } from "@/lib/RAZBranding";
 export const metadata: Metadata = {
   title: `Editor Dokumen — ${RAZ_CONFIG.appName}`,
   description:
-    "Sunting berkas Word, Excel, dan PowerPoint langsung di peramban web Anda. Tanpa unggah server, sepenuhnya privat dan mandiri.",
+    "Buka dan edit file Word, Excel, dan PowerPoint langsung di browsermu. 100% privat, cepat, dan mandiri tanpa kirim data ke server.",
   robots: {
     index: false,
     follow: false,

@@ -75,7 +75,7 @@ File hasil build statis yang siap di-deploy bakal otomatis tersimpan di folder `
 ## 🛠️ Arsitektur Singkat (Buat yang Penasaran Cara Kerjanya)
 
 1. **Client-Side Document Conversion (x2t WASM)**:  
-   Waktu kamu buka file `.docx`, `.xlsx`, atau `.pptx`, peramban menjalankan WebAssembly `x2t.wasm` lewat Web Worker untuk mengonversi dokumen jadi format biner ONLYOFFICE secara instan di memori komputermu.
+   Waktu kamu buka file `.docx`, `.xlsx`, atau `.pptx`, browser menjalankan WebAssembly `x2t.wasm` lewat Web Worker untuk mengonversi dokumen jadi format biner ONLYOFFICE secara instan di memori komputermu.
 
 2. **In-Browser Virtual Server**:  
    Alih-alih komunikasi ke server luar, RAZ Office punya *mock server* virtual di memori browser yang meng-handle semua request iframe ONLYOFFICE secara lokal.

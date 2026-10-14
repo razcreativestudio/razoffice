@@ -93,7 +93,7 @@ export function AboutView() {
         <div className="space-y-2">
           <h3 className="text-2xl font-bold">Misi & Komitmen Kami</h3>
           <p className="text-text-secondary text-sm max-w-xl mx-auto leading-relaxed">
-            Fokus kami simpel: memberikan pengalaman mengolah dokumen yang cepat, bebas ribet, dan 100% aman di perambanmu tanpa perlu upload berkas ke cloud pihak ketiga.
+            Fokus kami simpel: memberikan pengalaman mengolah dokumen yang cepat, bebas ribet, dan 100% aman di browsermu tanpa perlu upload berkas ke cloud pihak ketiga.
           </p>
         </div>
       </div>
