@@ -1,7 +1,17 @@
+/**
+ * Komponen: Kartu Pengunggah Berkas Dokumen (FilePickerCard)
+ * Lokasi: components/file-picker-card.tsx
+ * Diperbarui: 14 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Area dropzone interaktif berdesain enterprise untuk memilih dan membuka dokumen
+ * lokal (DOCX, XLSX, PPTX, PDF) menggunakan File System Access API modern dan fallback input standar.
+ * Menjamin 100% pemrosesan privat lokal tanpa pengunggahan berkas ke server luar.
+ */
+
 "use client";
 
-import { Upload, FileText, FolderOpen, Download } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { Upload, FileUp, ShieldCheck, FolderOpen, Sparkles } from "lucide-react";
 import { useExtracted } from "next-intl";
 
 interface FilePickerCardProps {
@@ -20,17 +30,18 @@ export function FilePickerCard({
   const [isDragOver, setIsDragOver] = useState(false);
   const [supportsFileSystemAPI, setSupportsFileSystemAPI] = useState(false);
 
-  // Check if File System Access API is supported
+  // Memeriksa dukungan peramban terhadap File System Access API modern
   useEffect(() => {
     if (typeof window !== "undefined" && "showOpenFilePicker" in window) {
       setSupportsFileSystemAPI(true);
     }
   }, []);
 
+  // Membuka jendela dialog pemilih berkas sistem operasi
   const handleClick = async () => {
-    // Prefer File System Access API if available
     if (supportsFileSystemAPI) {
       try {
+        // Menggunakan File System Access API agar dapat menyimpan handle berkas ke IndexedDB
         // @ts-ignore - File System Access API types
         const [fileHandle] = await window.showOpenFilePicker({
           types: [
@@ -63,20 +74,20 @@ export function FilePickerCard({
         }
         return;
       } catch (err: any) {
-        // If the user cancelled the picker, don't fallback to the regular input
+        // Batalkan jika pengguna menutup modal pemilih berkas
         if (err.name === "AbortError") return;
-        console.warn("File System Access API error, falling back:", err);
+        console.warn("File System Access API error, beralih ke input reguler:", err);
       }
     }
 
-    // Fallback to regular file input
+    // Fallback jika API modern tidak didukung atau terjadi kegagalan
     fileInputRef.current?.click();
   };
 
+  // Penanganan saat file dipilih melalui input HTML konvensional
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Regular file input doesn't provide handle
       if (onFileSelectWithHandle) {
         onFileSelectWithHandle(file, undefined);
       } else if (onFileSelect) {
@@ -85,6 +96,7 @@ export function FilePickerCard({
     }
   };
 
+  // Event handler drag and drop
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -109,7 +121,6 @@ export function FilePickerCard({
 
     if (!e.dataTransfer) return;
 
-    // 同步获取文件和项目，防止异步后 DataTransfer 被浏览器清除
     const files = Array.from(e.dataTransfer.files);
     const items = Array.from(e.dataTransfer.items);
 
@@ -130,11 +141,10 @@ export function FilePickerCard({
           }
         }
       } catch (err) {
-        console.log("Could not get FileSystemHandle from drag:", err);
+        console.log("Tidak dapat mengambil FileSystemHandle dari drag:", err);
       }
     }
 
-    // 回退到常规文件对象
     const fallbackFile = files[0];
     if (fallbackFile) {
       if (onFileSelectWithHandle) {
@@ -142,51 +152,6 @@ export function FilePickerCard({
       } else if (onFileSelect) {
         onFileSelect(fallbackFile);
       }
-    }
-  };
-
-  // Handle File System Access API folder picker
-  const handleFolderPick = async (
-    startIn: "documents" | "desktop" | "downloads",
-  ) => {
-    if (!supportsFileSystemAPI) return;
-
-    try {
-      // @ts-ignore - File System Access API types
-      const [fileHandle] = await window.showOpenFilePicker({
-        startIn,
-        types: [
-          {
-            description: "Office Documents",
-            accept: {
-              "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-                [".docx"],
-              "application/msword": [".doc"],
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                [".xlsx"],
-              "application/vnd.ms-excel": [".xls"],
-              "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-                [".pptx"],
-              "application/vnd.ms-powerpoint": [".ppt"],
-              "application/pdf": [".pdf"],
-            },
-          },
-        ],
-        multiple: false,
-      });
-
-      const file = await fileHandle.getFile();
-      if (file) {
-        // Prefer the new callback with handle, fallback to old one
-        if (onFileSelectWithHandle) {
-          onFileSelectWithHandle(file, fileHandle);
-        } else if (onFileSelect) {
-          onFileSelect(file);
-        }
-      }
-    } catch (err) {
-      // User cancelled or error occurred
-      console.log("File picker cancelled or error:", err);
     }
   };
 
@@ -206,97 +171,89 @@ export function FilePickerCard({
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
         className={`
-          w-full flex flex-col items-center justify-center p-6 
-          bg-linear-to-br from-primary/5 to-primary/10
-          border-[3px] border-dashed rounded-2xl 
-          transition-all duration-300 group cursor-pointer
-          hover:shadow-lg hover:shadow-primary/10
+          relative w-full overflow-hidden rounded-2xl cursor-pointer
+          border-2 transition-all duration-300 group
+          p-6 sm:p-8 md:p-10
           ${
             isDragOver
-              ? "border-primary bg-primary/20 scale-[1.02]"
-              : "border-primary/30 hover:border-primary/60"
+              ? "border-primary bg-primary/10 shadow-2xl shadow-primary/20 scale-[1.01]"
+              : "border-primary/25 hover:border-primary/60 bg-gradient-to-b from-card/80 via-card/50 to-primary/[0.03] hover:shadow-xl hover:shadow-primary/5"
           }
         `}
       >
-        <div
-          className={`
-          w-20 h-20 rounded-2xl flex items-center justify-center 
-          transition-all duration-300 mb-4
-          ${
-            isDragOver
-              ? "bg-primary scale-110 rotate-12"
-              : "bg-primary/10 group-hover:bg-primary group-hover:scale-110"
-          }
-        `}
-        >
-          <Upload
-            className={`
-            w-9 h-9 transition-colors duration-300
-            ${isDragOver ? "text-white" : "text-primary group-hover:text-white"}
-          `}
-          />
-        </div>
+        {/* Efek aksen gradasi di latar belakang */}
+        <div className="absolute -top-24 -right-24 w-60 h-60 bg-primary/10 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/15 transition-colors duration-500" />
+        <div className="absolute -bottom-24 -left-24 w-60 h-60 bg-primary/5 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/10 transition-colors duration-500" />
 
-        <div className="text-center w-full">
-          <h3 className="text-lg font-bold mb-1.5 text-foreground">
-            {isDragOver ? t("Drop your file here") : t("Choose a file")}
+        <div className="relative z-10 flex flex-col items-center justify-center text-center">
+          {/* Wadah ikon berdesain elegan */}
+          <div
+            className={`
+              w-18 h-18 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center mb-5
+              transition-all duration-300 shadow-md
+              ${
+                isDragOver
+                  ? "bg-primary text-black scale-110 rotate-6 shadow-primary/30"
+                  : "bg-primary/10 text-primary border border-primary/25 group-hover:bg-primary group-hover:text-black group-hover:scale-105 group-hover:border-primary"
+              }
+            `}
+          >
+            {isDragOver ? (
+              <FileUp className="w-9 h-9 sm:w-10 sm:h-10 animate-bounce" />
+            ) : (
+              <Upload className="w-8 h-8 sm:w-9 sm:h-9 transition-transform duration-300 group-hover:-translate-y-0.5" />
+            )}
+          </div>
+
+          {/* Judul & Deskripsi Utama */}
+          <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground mb-2">
+            {isDragOver ? t("Lepaskan berkas di sini") : t("Seret Berkas Dokumen ke Sini")}
           </h3>
-          <p className="text-xs text-text-secondary max-w-md mx-auto mb-1 leading-relaxed">
+
+          <p className="text-sm text-text-secondary max-w-lg mx-auto mb-5 leading-relaxed">
             {t(
-              "Drag and drop your Office document here, or click to browse from your computer",
+              "Buka dan sunting dokumen Office langsung dari komputer Anda tanpa batasan ukuran dan tanpa unggah ke server pihak ketiga.",
             )}
           </p>
-          <p className="text-[10px] text-text-secondary/70 mb-4">
-            {t("Supports: DOCX, DOC, XLSX, XLS, PPTX, PPT, PDF")}
-          </p>
 
-          {/* Quick access buttons for File System Access API */}
-          {supportsFileSystemAPI && false && (
-            <div className="flex items-center justify-center gap-3">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleFolderPick("documents");
-                }}
-                className="flex items-center gap-1.5 px-4 py-2 bg-white/80 border border-border/50 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all text-sm font-medium group shadow-sm"
-              >
-                <FileText className="w-4 h-4 text-blue-600 group-hover:text-blue-700" />
-                <span className="text-gray-700 group-hover:text-blue-700">
-                  {t("Docs")}
-                </span>
-              </button>
+          {/* Tombol Aksi Utama */}
+          <div className="mb-6">
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-primary text-black shadow-md shadow-primary/20 group-hover:bg-primary/95 group-hover:shadow-lg group-hover:shadow-primary/30 transition-all duration-200">
+              <FolderOpen className="w-4 h-4" />
+              {t("Pilih Berkas dari Komputer")}
+            </span>
+          </div>
 
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleFolderPick("desktop");
-                }}
-                className="flex items-center gap-1.5 px-4 py-2 bg-white/80 border border-border/50 rounded-lg hover:border-green-400 hover:bg-green-50 transition-all text-sm font-medium group shadow-sm"
-              >
-                <FolderOpen className="w-4 h-4 text-green-600 group-hover:text-green-700" />
-                <span className="text-gray-700 group-hover:text-green-700">
-                  {t("Desktop")}
-                </span>
-              </button>
+          {/* Badge Format Dokumen yang Didukung */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+              DOCX
+            </span>
+            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              XLSX
+            </span>
+            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+              PPTX
+            </span>
+            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+              PDF
+            </span>
+          </div>
 
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleFolderPick("downloads");
-                }}
-                className="flex items-center gap-1.5 px-4 py-2 bg-white/80 border border-border/50 rounded-lg hover:border-orange-400 hover:bg-orange-50 transition-all text-sm font-medium group shadow-sm"
-              >
-                <Download className="w-4 h-4 text-orange-600 group-hover:text-orange-700" />
-                <span className="text-gray-700 group-hover:text-orange-700">
-                  {t("Downloads")}
-                </span>
-              </button>
-            </div>
-          )}
+          {/* Jaminan Privasi & Keamanan */}
+          <div className="flex items-center gap-1.5 text-xs text-text-secondary/80">
+            <ShieldCheck className="w-4 h-4 text-primary" />
+            <span>{t("100% Privat: Berkas diproses sepenuhnya secara lokal di peramban")}</span>
+          </div>
         </div>
       </div>
     </>

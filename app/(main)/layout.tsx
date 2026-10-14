@@ -1,3 +1,12 @@
+/**
+ * Komponen: Layout Utama Aplikasi (MainLayout)
+ * Lokasi: app/(main)/layout.tsx
+ * Diperbarui: 14 Oktober 2026
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Kerangka tata letak utama RAZ Office dengan navigasi sidebar responsif,
+ * header sistem, efek pencahayaan latar belakang dark mode, dan overlay drag-drop dokumen global.
+ */
+
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -10,7 +19,6 @@ import { useAppStore } from "@/store";
 import { addRecentFile } from "@/utils/recent-files";
 import { cn } from "@/lib/utils";
 import { MobileNav } from "@/components/main/mobile-nav";
-import { ExtensionPrompt } from "@/components/extension-prompt";
 import { isDarkTheme } from "@/utils/utils";
 import { APP_ROOT, PRELOAD_HTML } from "@/utils/editor/utils";
 
@@ -88,9 +96,6 @@ export default function MainLayout({
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
         <MobileNav pathname={pathname} />
       </div>
-
-      {/* First-visit extension install prompt */}
-      <ExtensionPrompt />
 
       {/* Global Drag and Drop Overlay */}
       <DragDropOverlay

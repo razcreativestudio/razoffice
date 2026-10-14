@@ -18,6 +18,8 @@
 | 7 | **Integrasi Custom Modal (`RAZModal`)** | Menghadirkan komponen modal kustom `components/ui/RAZModal.tsx` dan memasangnya pada aksi hapus riwayat dokumen di beranda | SELESAI ✅ | Mematuhi aturan protokol mutlak *No Native Alerts/Confirms*. |
 | 8 | **Pembersihan Konfigurasi Paket** | Penambahan pnpm `onlyBuiltDependencies` di `package.json` untuk menghilangkan build warnings | SELESAI ✅ | Kompilasi bersih 100% tanpa hambatan. |
 | 9 | **Implementasi Logo Resmi Emas Isometrik** | Pembuatan vektor SVG tumpukan dokumen isometrik emas 4 lapis dengan sudut terlipat (`logo.svg`, `Logo.tsx`, `logo-name_black.svg`, `logo-name_white.svg`) | SELESAI ✅ | Presisi 100% dengan gambar referensi resmi pengguna. |
+| 10 | **Penghapusan Kartu Ekstensi Chrome** | Menghilangkan kartu promosi Chrome extension dari sidebar, popup notifikasi `ExtensionPrompt`, dan mengosongkan URL ekstensi | SELESAI ✅ | Sidebar bersih tanpa promosi ekstensi pihak ketiga. |
+| 11 | **Redesain Antarmuka Beranda (Initial UI Revamp)** | Menata ulang halaman beranda dengan header sambutan eksekutif, dropzone modern dengan chips format dokumen, kartu aksi cepat dokumen baru, templat unggulan, dan riwayat dokumen rapi | SELESAI ✅ | Tampilan modern, mewah, dan berstandar RAZ Enterprise. |
 
 ---
 

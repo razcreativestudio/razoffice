@@ -37,3 +37,28 @@
      - `backup/about-view.tsx.bak2`
      - `backup/og-image.tsx.bak2`
      - `backup/app_globals.css.bak`
+
+5. **Penghapusan Kartu Promosi Ekstensi Chrome & Pembersihan Notifikasi:**
+   - Menghapus blok kartu promosi ekstensi Chrome dari sidebar utama (`components/main/sidebar.tsx`).
+   - Membersihkan hook dan import yang tidak terpakai (`hasExtension`, `isExtensionAvailable`, `EXTENSION_STORE_URL`, `Puzzle`).
+   - Menghapus dialog popup `ExtensionPrompt` dari tata letak utama (`app/(main)/layout.tsx`).
+   - Mengosongkan variabel `EXTENSION_STORE_URL` di `utils/extension.ts` untuk memastikan tidak ada banner atau dialog promosi ekstensi yang muncul di lingkungan produksi enterprise.
+
+6. **Redesain Menyeluruh Antarmuka Beranda (Initial UI Revamp):**
+   - **Banner Sambutan Enterprise (`components/main/open-view.tsx`)**:
+     - Menambahkan kartu sambutan eksekutif dengan gradasi emas mewah, badge "Suite Perkantoran Web Enterprise", serta jaminan privasi "100% Local-First & Privat", "Engine WebAssembly x2t", dan "Standar RAZ Enterprise".
+   - **Redesain Area Unggah Dokumen (`components/file-picker-card.tsx`)**:
+     - Desain dropzone modern dengan border aksen emas responsif, efek pencahayaan latar belakang halus, ikon upload memantul saat drag-over, tombol aksi utama "Pilih Berkas dari Komputer", badge format dokumen resmi (DOCX, XLSX, PPTX, PDF), dan teks jaminan privasi lokal.
+   - **Hub Pembuatan Dokumen Baru (`components/main/open-view.tsx`)**:
+     - Mengubah baris tombol sederhana menjadi 4 kartu produk interaktif untuk Dokumen Word, Lembar Sebar Excel, Slide Presentasi PowerPoint, dan Dokumen PDF dengan deskripsi penggunaan, badge format, serta tombol aksi "Buat Sekarang".
+   - **Penyelarasan Templat Unggulan & Riwayat Dokumen**:
+     - Tampilan grid templat rekomendasi dengan rounded-xl, efek zoom gambar pada hover, dan badge tipe dokumen.
+     - Tampilan riwayat dokumen terbaru yang rapi dengan indikator waktu relatif, ikon jenis file, dan integrasi modal dialog kustom `RAZModal` untuk konfirmasi penghapusan riwayat.
+   - **Pembaruan Cadangan**:
+     - `backup/sidebar.tsx.bak2`
+     - `backup/open-view.tsx.bak2`
+     - `backup/file-picker-card.tsx.bak`
+     - `backup/utils_extension.ts.bak`
+     - `backup/app_main_layout.tsx.bak`
+     - `backup/messages_id.json.bak2`
+     - `backup/messages_en.json.bak2`

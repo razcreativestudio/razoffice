@@ -5,9 +5,9 @@
  * Supports file:// URLs and cross-origin http(s) URLs.
  */
 
-// Set to the actual Chrome Web Store URL once the extension is published.
-// When empty, all extension install prompts are hidden.
-export const EXTENSION_STORE_URL = "https://chromewebstore.google.com/detail/office-editor-for-docs-sh/kjigcolnmdghbjgkcijcdahaobhkpngo";
+// Set to empty string ("") agar semua notifikasi / prompt instalasi ekstensi disembunyikan
+// sesuai standar arsitektur mandiri RAZ Enterprise.
+export const EXTENSION_STORE_URL = "";
 
 /**
  * Get the extension ID from the meta tag injected by the content script.

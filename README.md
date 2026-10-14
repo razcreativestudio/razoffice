@@ -1,6 +1,6 @@
 <!--
   Proyek: RAZ Office
-  Pembaruan Terakhir: 13 Oktober 2026
+  Pembaruan Terakhir: 14 Oktober 2026
   Deskripsi: README Utama sebagai Single Source of Truth Proyek RAZ Office
 -->
 
@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.1.0-gold.svg" alt="Version">
   <img src="https://img.shields.io/badge/framework-Next.js%2016-black.svg" alt="Framework">
   <img src="https://img.shields.io/badge/standard-RAZ%20Enterprise-success.svg" alt="Standard">
   <img src="https://img.shields.io/badge/license-AGPL%20v3-orange.svg" alt="License">
