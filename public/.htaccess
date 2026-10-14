@@ -1,0 +1,54 @@
+# ==============================================================================
+# RAZ Office - Apache / LiteSpeed Configuration for cPanel (IDwebhost)
+# ==============================================================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Jika file atau folder fisik memang ada, langsung buka file aslinya
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 2. Routing URL bersih Next.js (misal: /about -> about.html, /editor -> editor.html)
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^([^/]+)/?$ $1.html [L]
+
+  # 3. Routing untuk sub-folder bertingkat
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.*)$ $1.html [L]
+
+  # 4. Fallback ke 404 kustom
+  ErrorDocument 404 /404.html
+</IfModule>
+
+# ==============================================================================
+# MIME Types untuk WebAssembly & Modern Assets
+# ==============================================================================
+<IfModule mod_mime.c>
+  AddType application/wasm .wasm
+  AddType application/json .json
+  AddType image/svg+xml .svg .svgz
+  AddEncoding gzip .svgz
+</IfModule>
+
+# ==============================================================================
+# Content-Encoding Brotli untuk Core Engine WASM (x2t)
+# ==============================================================================
+<IfModule mod_headers.c>
+  # File biner x2t dikompresi menggunakan Brotli (.br)
+  <FilesMatch "^x2t.*">
+    Header set Content-Encoding br
+    Header set Cache-Control "public, max-age=31556952, immutable"
+  </FilesMatch>
+
+  <FilesMatch "\.wasm$">
+    Header set Cache-Control "public, max-age=31556952, immutable"
+  </FilesMatch>
+
+  # Cache statis untuk aset JS & CSS Next.js
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$">
+    Header set Cache-Control "public, max-age=31556952, immutable"
+  </FilesMatch>
+</IfModule>
