@@ -2,29 +2,31 @@
 # RAZ Office - Apache / LiteSpeed Configuration for cPanel (IDwebhost)
 # ==============================================================================
 
+# 1. Matikan Directory Browsing agar LiteSpeed tidak pernah menampilkan "Index of /"
+Options -Indexes
+
+# 2. Utamakan index.html sebagai halaman utama setiap folder
+DirectoryIndex index.html index.htm
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # 1. Jika file atau folder fisik memang ada, langsung buka file aslinya
+  # Jika file atau folder memang ada di server, langsung sajikan
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 2. Routing URL bersih Next.js (misal: /about -> about.html, /editor -> editor.html)
-  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
-  RewriteRule ^([^/]+)/?$ $1.html [L]
+  # Dukungan routing untuk folder yang memiliki index.html
+  RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+  RewriteRule ^(.*)/?$ $1/index.html [L]
 
-  # 3. Routing untuk sub-folder bertingkat
-  RewriteCond %{REQUEST_FILENAME}.html -f
-  RewriteRule ^(.*)$ $1.html [L]
-
-  # 4. Fallback ke 404 kustom
-  ErrorDocument 404 /404.html
+  # Fallback halaman tidak ditemukan (404)
+  ErrorDocument 404 /404/index.html
 </IfModule>
 
 # ==============================================================================
-# MIME Types untuk WebAssembly & Modern Assets
+# MIME Types untuk WebAssembly & Aset Modern
 # ==============================================================================
 <IfModule mod_mime.c>
   AddType application/wasm .wasm
@@ -34,7 +36,7 @@
 </IfModule>
 
 # ==============================================================================
-# Content-Encoding Brotli untuk Core Engine WASM (x2t)
+# Content-Encoding Brotli untuk Core Engine WASM (x2t) & Cache Statis
 # ==============================================================================
 <IfModule mod_headers.c>
   # File biner x2t dikompresi menggunakan Brotli (.br)
@@ -47,7 +49,7 @@
     Header set Cache-Control "public, max-age=31556952, immutable"
   </FilesMatch>
 
-  # Cache statis untuk aset JS & CSS Next.js
+  # Cache browser untuk aset statis agar loading instan
   <FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$">
     Header set Cache-Control "public, max-age=31556952, immutable"
   </FilesMatch>
