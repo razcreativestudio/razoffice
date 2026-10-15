@@ -53,8 +53,18 @@
 5. **Pengamanan Backup Terpusat:**
    - `backup/index.html.bak2`
    - `backup/index_loader.html.bak`
+   - `backup/README.md.bak4`
 
 6. **Kompilasi & Validasi:**
    - `node --check` pada bundle JS (2,16 MB) lolos validasi tanpa syntax error.
    - `pnpm run build` berhasil 100% dan seluruh berkas di direktori `out/` telah termutakhirkan.
    - Endpoint Apache diuji langsung (`http://localhost/razoffice/out/...`) dan menghasilkan HTTP 200 dengan muatan fitur lengkap.
+
+7. **Implementasi CI/CD Auto-Deploy ke IDwebhost cPanel:**
+   - **Pembuatan Workflow GitHub Actions (`.github/workflows/RAZDeployIDwebhost.yml`):**
+     - Mengotomasi seluruh proses: Checkout repo -> Setup Node.js 22 & pnpm -> Install dependencies -> Build Next.js statis (`pnpm run build`) -> Sync direktori `./out/` ke server IDwebhost via FTPS/FTP menggunakan `SamKirkland/FTP-Deploy-Action@v4.3.5`.
+     - Tidak membebani shared hosting cPanel IDwebhost dengan proses kompilasi berat, melainkan murni memanfaatkan runner GitHub yang cepat dan gratis.
+   - **Penerbitan Dokumen Panduan (`docs/RAZHostingDeployGuide.md`):**
+     - Panduan berbahasa Indonesia yang mudah dipahami bagi pengguna awam mengenai cara pembuatan akun FTP di cPanel IDwebhost dan pendaftaran GitHub Secrets (`FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`).
+   - **Pembaruan `README.md`:** Menambahkan referensi langsung ke panduan deploy hosting.
+

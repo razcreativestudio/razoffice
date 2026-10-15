@@ -87,5 +87,15 @@ File hasil build statis yang siap di-deploy bakal otomatis tersimpan di folder `
 
 ---
 
+## 🌐 Deploy Otomatis ke Hosting (IDwebhost / cPanel)
+
+RAZ Office sudah dilengkapi pipeline **CI/CD GitHub Actions** bawaan (`.github/workflows/RAZDeployIDwebhost.yml`). Setiap kali kamu melakukan `git push` ke branch `main`, GitHub akan otomatis mengompilasi aplikasi dan mengirim file statis terbaru langsung ke cPanel hosting IDwebhost kamu via FTP.
+
+Panduan lengkap langkah demi langkah dapat kamu baca di:  
+👉 **[Panduan Deploy Otomatis IDwebhost](docs/RAZHostingDeployGuide.md)**
+
+---
+
 ## 📜 Lisensi & Atribusi
 Proyek ini dibangun dan dikembangkan dengan bangga oleh tim **RAZ Enterprise** di atas fondasi open-source ONLYOFFICE. Berada di bawah lisensi terbuka **GNU Affero General Public License v3.0 (AGPL v3)**.
+
