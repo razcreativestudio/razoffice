@@ -2,7 +2,10 @@
 <html>
 <head>
     <base href="https://office-editor.ziziyi.com/v9.3.0.24-1/web-apps/apps/documenteditor/main/">
-    <title>ONLYOFFICE Document Editor</title>
+    <title>RAZ Office - Document Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Poppins:wght@400;600;700&family=Roboto:wght@400;500;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=Lora:wght@400;700&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=IE8"/>
     <meta name="description" content="" />
@@ -349,6 +352,24 @@ var checkLocalStorage=function(){try{localStorage.setItem("test",1);localStorage
         isIEBrowser === true &&
             (document.write('<script src="../../common/main/lib/util/fix-ie-compat.js"><\/script>'),
             document.write('<script src="../../../../sdkjs/vendor/string.js"><\/script>'));
+    </script>
+    <script>
+        var requireTimeoutID = setTimeout(function(){
+            window.location.reload();
+        }, 30000);
+
+        var require = {
+            waitSeconds: 60,
+            paths: {
+                'app': (function(){
+                    var loc = window.location.href.split('?')[0];
+                    return loc.replace(/\/[^\/]+$/, '/app');
+                })()
+            },
+            callback: function(){
+                clearTimeout(requireTimeoutID);
+            }
+        };
     </script>
     <script src="../../../vendor/requirejs/require.js"></script>
     <script>

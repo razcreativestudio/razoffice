@@ -426,7 +426,10 @@ var checkLocalStorage=function(){try{localStorage.setItem("test",1);localStorage
         var require = {
             waitSeconds: 60,
             paths: {
-                'app': location.origin + '/v9.3.0.24-1/web-apps/apps/documenteditor/main/app'
+                'app': (function(){
+                    var loc = window.location.href.split('?')[0];
+                    return loc.replace(/\/[^\/]+$/, '/app');
+                })()
             },
             callback: function(){
                 clearTimeout(requireTimeoutID);

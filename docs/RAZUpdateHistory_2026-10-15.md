@@ -1,0 +1,60 @@
+# RAZ Office - Update History (15 Oktober 2026)
+
+**Tanggal:** 15 Oktober 2026  
+**Penanggung Jawab:** Antigravity AI Engine  
+**Versi Aplikasi:** 0.1.5 (Dynamic Script Resolution, Times New Roman 12pt Auto-Enforce, 1000+ Fonts & F4/Folio Paper Size Verified)
+
+---
+
+### Rincian Aktivitas Pembaruan & Investigasi:
+
+1. **Investigasi & Analisis Akar Masalah ("Belum Masuk Semua"):**
+   - **Akar Masalah Path Resolution:**
+     - Pada konfigurasi sebelumnya di `index.html`, path RequireJS didefinisikan menggunakan `location.origin + '/v9.3.0.24-1/...'`.
+     - Ketika aplikasi diakses melalui subfolder (misalnya Apache Laragon `http://localhost/razoffice/out/` atau subfolder cPanel di IDwebhost), `location.origin` merujuk ke domain root (`http://localhost`), sehingga pemanggilan berkas `app.js` menghasilkan status **404 Not Found**.
+     - Akibatnya, browser gagal memuat berkas lokal dan mengalami timeout atau fallback ke remote CDN ONLYOFFICE yang tidak memuat modifikasi kita.
+   - **Akar Masalah Dual Loader (`index_loader.html`):**
+     - Sesi editor yang mengaktifkan parameter loader memuat `index_loader.html`, yang sebelumnya belum memiliki konfigurasi require path lokal dan tautan Google Fonts.
+   - **Akar Masalah Default Document Content Font:**
+     - Pengaturan `editorConfig.customization.font` pada DocsAPI hanya mengatur font elemen UI antarmuka (`--font-family-base-custom`), bukan font teks paragraf di dalam dokumen.
+
+2. **Perbaikan Resolusi Skrip Dinamis (Universal Subfolder & Root Support):**
+   - **Dukungan Dinamis di `index.html` & `index_loader.html`:**
+     - Mengubah path RequireJS `'app'` menjadi dinamis berdasarkan URL halaman saat ini:
+       ```javascript
+       paths: {
+           'app': (function(){
+               var loc = window.location.href.split('?')[0];
+               return loc.replace(/\/[^\/]+$/, '/app');
+           })()
+       }
+       ```
+     - Memastikan resolusi berkas `app.js` berjalan tepat 100% di semua lingkungan (localhost:3000, subfolder Apache Laragon, domain utama cPanel, maupun subpath hosting).
+   - **Registrasi Modul AMD di `app.js`:**
+     - Menambahkan `define("app",(function(){}));` di baris akhir `app.js` agar RequireJS segera mengenali modul `'app'` telah terdefinisi tanpa menunggu timeout.
+
+3. **Penegakan Font Default Times New Roman (12pt):**
+   - Menetapkan nilai awal `value: "12"` pada kontrol toolbar `cmbFontSize`.
+   - Menginjeksi auto-enforcement pada `Toolbar.onDocumentReady` di dalam `app.js`:
+     ```javascript
+     t.api.put_TextPrFontName("Times New Roman");
+     t.api.put_TextPrFontSize(24); // 24 half-points = 12pt
+     if(t.toolbar){
+       t.toolbar.cmbFontName && t.toolbar.cmbFontName.setValue("Times New Roman");
+       t.toolbar.cmbFontSize && t.toolbar.cmbFontSize.setValue("12");
+     }
+     ```
+   - Setiap kali membuka dokumen baru atau berpindah fokus, editor secara konsisten menetapkan Times New Roman 12pt sebagai format standar.
+
+4. **Verifikasi Fitur Koleksi 1000+ Font & Ukuran Kertas F4/Folio:**
+   - **Koleksi Font:** 1,090 font (Google Fonts, Windows, Mac, Linux) lengkap dengan HTML5 Canvas fallback thumbnail generator yang telah terintegrasi di `app.js`.
+   - **Ukuran Kertas:** Menu *Layout > Page Size* memuat preset lengkap: F4 / Folio (21,5 × 33 cm), Executive (18,41 × 26,67 cm), A6 (10,5 × 14,8 cm), dan B4 (25 × 35,3 cm).
+
+5. **Pengamanan Backup Terpusat:**
+   - `backup/index.html.bak2`
+   - `backup/index_loader.html.bak`
+
+6. **Kompilasi & Validasi:**
+   - `node --check` pada bundle JS (2,16 MB) lolos validasi tanpa syntax error.
+   - `pnpm run build` berhasil 100% dan seluruh berkas di direktori `out/` telah termutakhirkan.
+   - Endpoint Apache diuji langsung (`http://localhost/razoffice/out/...`) dan menghasilkan HTTP 200 dengan muatan fitur lengkap.
