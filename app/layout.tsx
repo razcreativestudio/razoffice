@@ -60,11 +60,23 @@ export default async function RootLayout({
 }>) {
   const messages = await getMessages();
 
-  // Script inisialisasi tema sebelum rendering DOM untuk mencegah efek flash
+  // Script inisialisasi tema sebelum rendering DOM untuk mencegah efek flash (Default: Modern Dark)
   const preload = () => {
-    const theme = document.cookie.match(/theme=([^;]+)/)?.[1] || "";
-    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = theme === "dark" || (dark && theme !== "light");
+    let theme = document.cookie.match(/theme=([^;]+)/)?.[1];
+    if (!theme) {
+      try {
+        const stored = localStorage.getItem("office-state");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          const t = parsed?.state?.theme;
+          if (t) {
+            theme = (t === "theme-dark" || t === "theme-night" || t === "theme-contrast-dark") ? "dark" : "light";
+          }
+        }
+      } catch (e) {}
+    }
+    // Default aplikasi adalah Modern Dark (dark mode) jika belum ada preferensi spesifik
+    const isDark = theme ? theme === "dark" : true;
     document.documentElement.classList.toggle("dark", isDark);
   };
 

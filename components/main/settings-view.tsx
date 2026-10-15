@@ -100,7 +100,7 @@ export function SettingsView() {
       localStorage.removeItem("ui-theme-id");
 
       const themeValue = isDarkTheme(newTheme) ? "dark" : "light";
-      document.cookie = `theme=${themeValue}; path=/`;
+      document.cookie = `theme=${themeValue}; path=/; max-age=31536000`;
     }
     setState({ theme: newTheme });
   };

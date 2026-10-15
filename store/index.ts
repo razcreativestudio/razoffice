@@ -50,7 +50,7 @@ export const useAppStore = create<AppState>()(
 
       // Settings Initial State
       language: LocaleExtend.Auto,
-      theme: "theme-white",
+      theme: "theme-night", // Modern Dark sebagai default bawaan
       plugins: "featured",
 
       // Settings Actions
@@ -58,6 +58,16 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: "office-state",
+      version: 1,
+      migrate: (persistedState: any, version: number) => {
+        // Otomatis migrasi pengguna lama yang masih menggunakan default theme-white ke theme-night (Modern Dark)
+        if (version === 0 && persistedState) {
+          if (persistedState.theme === "theme-white" || !persistedState.theme) {
+            persistedState.theme = "theme-night";
+          }
+        }
+        return persistedState;
+      },
       // Only persist settings, skip server instance
       partialize: (state) => ({
         language: state.language,

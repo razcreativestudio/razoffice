@@ -68,3 +68,11 @@
      - Panduan berbahasa Indonesia yang mudah dipahami bagi pengguna awam mengenai cara pembuatan akun FTP di cPanel IDwebhost dan pendaftaran GitHub Secrets (`FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`).
    - **Pembaruan `README.md`:** Menambahkan referensi langsung ke panduan deploy hosting.
 
+8. **Penetapan Tema Default: Modern Dark (`theme-night`):**
+   - **State Store (`store/index.ts`):** Mengubah inisialisasi tema default dari `"theme-white"` menjadi `"theme-night"`. Menambahkan skema versioning dan fungsi `migrate` pada persist store agar sesi lama otomatis diperbarui ke tema Modern Dark.
+   - **Preload DOM Layout (`app/layout.tsx`):** Memperbarui skrip `preload` agar default ke dark mode saat belum ada preferensi tersimpan di cookie atau storage, menghilangkan efek flicker saat halaman dimuat.
+   - **Cookie Persistence (`components/main/settings-view.tsx`):** Menambahkan `max-age=31536000` pada cookie preferensi tema.
+   - **Pengamanan Backup Terpusat:** `backup/store_index.ts.bak`, `backup/app_layout.tsx.bak2`, `backup/settings_view.tsx.bak2`.
+   - **Validasi Build:** `pnpm run build` sukses mengompilasi seluruh rute statis tanpa kendala.
+
+
