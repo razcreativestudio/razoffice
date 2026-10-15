@@ -69,10 +69,24 @@
    - **Pembaruan `README.md`:** Menambahkan referensi langsung ke panduan deploy hosting.
 
 8. **Penetapan Tema Default: Modern Dark (`theme-night`):**
-   - **State Store (`store/index.ts`):** Mengubah inisialisasi tema default dari `"theme-white"` menjadi `"theme-night"`. Menambahkan skema versioning dan fungsi `migrate` pada persist store agar sesi lama otomatis diperbarui ke tema Modern Dark.
-   - **Preload DOM Layout (`app/layout.tsx`):** Memperbarui skrip `preload` agar default ke dark mode saat belum ada preferensi tersimpan di cookie atau storage, menghilangkan efek flicker saat halaman dimuat.
+   - **State Store (`store/index.ts`):** Mengubah inisialisasi tema default dari `"theme-white"` menjadi `"theme-night"`.
+   - **Preload DOM Layout (`app/layout.tsx`):** Memperbarui skrip `preload` agar default ke dark mode saat belum ada preferensi tersimpan di cookie atau storage.
    - **Cookie Persistence (`components/main/settings-view.tsx`):** Menambahkan `max-age=31536000` pada cookie preferensi tema.
-   - **Pengamanan Backup Terpusat:** `backup/store_index.ts.bak`, `backup/app_layout.tsx.bak2`, `backup/settings_view.tsx.bak2`.
-   - **Validasi Build:** `pnpm run build` sukses mengompilasi seluruh rute statis tanpa kendala.
+
+9. **Penegakan Mutlak (Hard-Enforcement) Modern Dark, Times New Roman & Font Size 12pt:**
+   - **Akar Masalah Cache Tema:** State `office-state` lama di `localStorage` tanpa properti `version` menyebabkan migrasi Zustand persist tidak tereksekusi (`version === undefined !== 0`), sehingga skrip preload tetap membaca nilai `"theme-white"` lama.
+   - **Solusi Tuntas Tema:**
+     - Menginjeksi auto-migration langsung di skrip `preload` tag `<head>` (`app/layout.tsx`) untuk mendeteksi dan secara aktif menimpa cache lama atau versi < 2 menjadi `"theme-night"` dengan `document.cookie = "theme=dark"`.
+     - Menaikkan versi persist store ke `version: 2` pada `store/index.ts` dengan penanganan fallback menyeluruh (`!version || version < 2 || theme === 'theme-white'`).
+     - Menyematkan fallback protektif pada `app/editor/page.tsx` (`uiTheme`) agar selalu mengarah ke `theme-night`.
+   - **Akar Masalah Font & Size di Engine Editor:**
+     - Engine WASM ONLYOFFICE saat memuat dokumen baru secara internal memancarkan event `asc_onFont` (Arial) dan `asc_onFontSize` (11pt) dari template dasar, sehingga menimpa pengaturan awal toolbar.
+   - **Solusi Tuntas Font & Size (`app.js`):**
+     - Mengintersepsi method `onApiChangeFont`: jika font yang dipancarkan engine adalah `Arial` atau pada pembukaan pertama (`!this._defaultFontSet`), otomatis dialihkan ke `"Times New Roman"`, menyinkronkan API `put_TextPrFontName`, dan mengunci nilai combobox.
+     - Mengintersepsi method `onApiFontSize`: jika ukuran yang dipancarkan engine adalah `11` atau pada pembukaan pertama (`!this._defaultSizeSet`), otomatis dialihkan ke `12`, memanggil `put_TextPrFontSize(12)`, dan memperbarui combobox toolbar.
+     - Pada event `onDocumentReady`: mengeksekusi `asc_EditSelectAll()`, `put_TextPrFontName("Times New Roman")`, `put_TextPrFontSize(12)`, dan memicu `edit:complete`.
+   - **Pengamanan Backup:** `backup/app.js.bak2`, `backup/editor_page.tsx.bak2`.
+   - **Validasi Kompilasi:** `node --check` valid, `pnpm run build` berhasil 100% dan berkas di `out/` termutakhirkan sempurna.
+
 
 

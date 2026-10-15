@@ -62,21 +62,23 @@ export default async function RootLayout({
 
   // Script inisialisasi tema sebelum rendering DOM untuk mencegah efek flash (Default: Modern Dark)
   const preload = () => {
-    let theme = document.cookie.match(/theme=([^;]+)/)?.[1];
-    if (!theme) {
-      try {
-        const stored = localStorage.getItem("office-state");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          const t = parsed?.state?.theme;
-          if (t) {
-            theme = (t === "theme-dark" || t === "theme-night" || t === "theme-contrast-dark") ? "dark" : "light";
-          }
+    try {
+      var s = localStorage.getItem("office-state");
+      if (s) {
+        var p = JSON.parse(s);
+        if (!p.version || p.version < 2 || p?.state?.theme === "theme-white" || p?.state?.theme === "theme-light") {
+          if (!p.state) p.state = {};
+          p.state.theme = "theme-night";
+          p.version = 2;
+          localStorage.setItem("office-state", JSON.stringify(p));
+          document.cookie = "theme=dark; path=/; max-age=31536000";
         }
-      } catch (e) {}
-    }
-    // Default aplikasi adalah Modern Dark (dark mode) jika belum ada preferensi spesifik
-    const isDark = theme ? theme === "dark" : true;
+      } else {
+        document.cookie = "theme=dark; path=/; max-age=31536000";
+      }
+    } catch (e) {}
+    var c = document.cookie.match(/theme=([^;]+)/)?.[1];
+    var isDark = c ? c !== "light" : true;
     document.documentElement.classList.toggle("dark", isDark);
   };
 

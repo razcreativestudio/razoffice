@@ -61,7 +61,7 @@ export default function Page() {
 
     const editing = paramEditing === null ? true : paramEditing !== "0";
     const lang = paramLang || language;
-    const uiTheme = paramTheme || theme;
+    const uiTheme = paramTheme || (theme === "theme-white" || theme === "theme-light" ? "theme-night" : theme);
 
     let editor: DocEditor | null = null;
 

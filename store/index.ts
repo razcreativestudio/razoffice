@@ -58,11 +58,11 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: "office-state",
-      version: 1,
+      version: 2,
       migrate: (persistedState: any, version: number) => {
-        // Otomatis migrasi pengguna lama yang masih menggunakan default theme-white ke theme-night (Modern Dark)
-        if (version === 0 && persistedState) {
-          if (persistedState.theme === "theme-white" || !persistedState.theme) {
+        // Otomatis migrasi pengguna lama yang masih menggunakan default theme-white/theme-light ke theme-night (Modern Dark)
+        if (!version || version < 2 || persistedState?.theme === "theme-white" || persistedState?.theme === "theme-light" || !persistedState?.theme) {
+          if (persistedState) {
             persistedState.theme = "theme-night";
           }
         }
