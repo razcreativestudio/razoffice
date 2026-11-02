@@ -39,13 +39,10 @@ DirectoryIndex index.html index.htm
 # Content-Encoding Brotli untuk Core Engine WASM (x2t) & Cache Statis
 # ==============================================================================
 <IfModule mod_headers.c>
-  # File biner x2t dikompresi menggunakan Brotli (.br)
-  <FilesMatch "^x2t.*">
+  # File biner WebAssembly x2t dikompresi menggunakan Brotli (.wasm / .br)
+  # Pastikan file JavaScript (.js) tidak dikenakan header br statis agar tidak memicu double compression di LiteSpeed
+  <FilesMatch "(^x2t.*\.wasm$|\.br$)">
     Header set Content-Encoding br
-    Header set Cache-Control "public, max-age=31556952, immutable"
-  </FilesMatch>
-
-  <FilesMatch "\.wasm$">
     Header set Cache-Control "public, max-age=31556952, immutable"
   </FilesMatch>
 

@@ -1232,7 +1232,7 @@
             params += "&parentOrigin=" + config.parentOrigin;
 
         if (config.editorConfig && config.editorConfig.customization && config.editorConfig.customization.uiTheme )
-            params += "&uitheme=" + config.editorConfig.customization.uiTheme;
+            params += "&uitheme=" + config.editorConfig.customization.uiTheme + ((config.editorConfig.customization.uiTheme === "theme-night" || config.editorConfig.customization.uiTheme.indexOf("dark") !== -1) ? "&uithemetype=dark" : "");
 
         if (config.document && config.document.fileType)
             params += "&fileType=" + config.document.fileType;

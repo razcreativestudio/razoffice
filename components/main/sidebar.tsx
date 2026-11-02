@@ -83,6 +83,7 @@ export function Sidebar({ pathname }: SidebarProps) {
                   <Link
                     key={type}
                     href={getNewUrl(type)}
+                    prefetch={false}
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
                       // Light mode: use doc colors; Dark mode: use custom dark styles
@@ -116,6 +117,7 @@ export function Sidebar({ pathname }: SidebarProps) {
             <Link
               key={item.id}
               href={item.href}
+              prefetch={false}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-sm font-medium",
                 isActive
@@ -138,6 +140,7 @@ export function Sidebar({ pathname }: SidebarProps) {
       <div className="p-4 space-y-1">
         <Link
           href="/settings"
+          prefetch={false}
           className={cn(
             "w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors rounded-md",
             pathname === "/settings"
@@ -156,6 +159,7 @@ export function Sidebar({ pathname }: SidebarProps) {
 
         <Link
           href="/about"
+          prefetch={false}
           className={cn(
             "w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors rounded-md",
             pathname === "/about"

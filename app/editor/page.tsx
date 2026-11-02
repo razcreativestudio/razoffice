@@ -101,6 +101,13 @@ export default function Page() {
         },
       });
 
+      // Sinkronisasi preferensi tema dark ke internal localStorage editor ONLYOFFICE
+      try {
+        win.localStorage.setItem("ui-theme-id", uiTheme);
+        win.localStorage.setItem("content-theme", "dark");
+        win.localStorage.setItem("settings-ui-theme", uiTheme);
+      } catch (e) {}
+
       // const script = iframeDoc.createElement("script");
       // script.src = apiUrl;
       // iframeDoc.body.appendChild(script);
@@ -165,6 +172,45 @@ export default function Page() {
           },
           onDocumentReady: (e: unknown) => {
             console.log("Document ready", e);
+            // Penegakan default Times New Roman 12pt secara konsisten saat dokumen siap
+            try {
+              const iframe = document.querySelector<HTMLIFrameElement>(
+                'iframe[name="frameEditor"]',
+              );
+              const win = iframe?.contentWindow as any;
+              if (win) {
+                const applyDefaultFont = () => {
+                  try {
+                    const de = win.DE || win.SSE || win.PE;
+                    if (de?.controllers?.Toolbar) {
+                      const tb = de.controllers.Toolbar;
+                      tb.cmbFontName?.setValue?.("Times New Roman");
+                      tb.cmbFontSize?.setValue?.("12");
+                    }
+                    if (win.Asc?.editor?.callCommand) {
+                      win.Asc.editor.callCommand(function () {
+                        try {
+                          const oDoc = (window as any).Api?.GetDocument?.();
+                          if (oDoc) {
+                            const oStyle = oDoc.GetStyle?.("Normal");
+                            if (oStyle) {
+                              const oTextPr = oStyle.GetTextPr?.();
+                              oTextPr?.SetFontFamily?.("Times New Roman");
+                              oTextPr?.SetFontSize?.(24);
+                            }
+                          }
+                        } catch (err) {}
+                      });
+                    }
+                  } catch (err) {}
+                };
+                applyDefaultFont();
+                setTimeout(applyDefaultFont, 300);
+                setTimeout(applyDefaultFont, 1000);
+              }
+            } catch (err) {
+              console.warn("[RAZ] Default font enforcement error:", err);
+            }
           },
           onDocumentStateChange: (e: { data: boolean; target: unknown }) => {
             console.log("Document state change", e);

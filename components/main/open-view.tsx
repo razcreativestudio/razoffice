@@ -254,6 +254,7 @@ export function OpenView({
               <Link
                 key={type}
                 href={getNewUrl(type)}
+                prefetch={false}
                 className={cn(
                   "group relative flex flex-col justify-between p-5 bg-card/60 dark:bg-zinc-900/40 border border-border/80 rounded-2xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden",
                   colorClass,

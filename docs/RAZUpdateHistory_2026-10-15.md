@@ -90,3 +90,22 @@
 
 
 
+
+10. **Penyelesaian Tuntas Kendala Produksi (x2t Worker, SVG Crash, RSC 404 & Pembersihan URL Eksternal):**
+    - **Perbaikan Fatal Error x2t Web Worker (`importScripts: Invalid or unexpected token`):**
+      - Teridentifikasi berkas `public/x2t-1/x2t.js` di server merupakan berkas terkompresi Brotli yang tersimpan langsung dengan ekstensi `.js`.
+      - Pada web server LiteSpeed IDwebhost, file `.js` otomatis dikompresi kembali saat client meminta `Accept-Encoding: br` (Double Brotli Compression). Akibatnya browser mendekompression sekali dan mengoper biner Brotli mentah ke `importScripts`, menyebabkan `SyntaxError`.
+      - Mengganti `public/x2t-1/x2t.js` dengan berkas JavaScript plain text murni (174 KB) dan memperbarui rule `<FilesMatch>` di `public/.htaccess` agar LiteSpeed tidak memaksa header kompresi statis pada file script.
+    - **Perbaikan Crash SVG Sprite (`child.setAttribute is not a function`):**
+      - Pemanggilan remote sprite SVG `formats@2.5x.svg` mengalami 404 dan menyebabkan method injeksi ikon DOM mengalami crash `TypeError`, yang menghentikan inisialisasi tema dark pada `index.html`.
+      - Dibuatkan berkas aset lokal `formats@2.5x.svg` di `public/v9.3.0.24-1/web-apps/apps/common/main/resources/img/doc-formats/`.
+      - Ditambahkan pengecekan protektif (`if (!text) return;`, `if (child && child.setAttribute)`) di 11 file HTML editor (`documenteditor`, `spreadsheeteditor`, `presentationeditor`, `pdfeditor`, `visioeditor`).
+    - **Penegakan Modern Dark Otomatis pada Iframe Editor:**
+      - Memperbarui `api.js` agar menyematkan parameter `&uithemetype=dark` setiap kali preferensi dark dipilih (`theme-night`).
+      - Menginjeksi penambahan class `.theme-type-dark` dan `.content-theme-dark` pada elemen `<body>` di `index.html` sehingga tema editor berubah menjadi Modern Dark secara instan tanpa glitch.
+    - **Pembersihan Total Dependensi Eksternal (`office-editor.ziziyi.com`):**
+      - Menghapus 67 URL hardcoded `https://office-editor.ziziyi.com` pada tag `<base href>` di seluruh template HTML editor dan menjadikannya path root-relative (`/v9.3.0.24-1/...`), menjamin sistem 100% mandiri (*self-hosted*), privat, dan bebas dari 404 maupun isu CORS pihak ketiga.
+    - **Eliminasi 404 Next.js RSC Prefetch:**
+      - Menambahkan atribut `prefetch={false}` pada komponen navigasi `<Link>` (`sidebar.tsx`, `mobile-nav.tsx`, `open-view.tsx`) untuk mencegah error 404 `.txt?_rsc=...` pada static export hosting.
+    - **Verifikasi Kompilasi & Build:**
+      - `pnpm run build` berhasil 100% (exit code 0) dan seluruh berkas statis di direktori `out/` siap dideploy.
