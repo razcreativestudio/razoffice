@@ -46,8 +46,15 @@ DirectoryIndex index.html index.htm
     Header set Cache-Control "public, max-age=31556952, immutable"
   </FilesMatch>
 
+  # Jangan simpan cache untuk HTML dan skrip API agar browser selalu memuat kode terbaru
+  <FilesMatch "(index\.html$|api\.js$)">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+  </FilesMatch>
+
   # Cache browser untuk aset statis agar loading instan
-  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$">
+  <FilesMatch "\.(css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$">
     Header set Cache-Control "public, max-age=31556952, immutable"
   </FilesMatch>
 </IfModule>

@@ -380,7 +380,7 @@
         window.uitype = "cell";
     </script>
 
-    <link rel="stylesheet" type="text/css" href="../../../../sdkjs/cell/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="https://office-editor.ziziyi.com/v9.3.0.24-1/sdkjs/cell/css/main.css"/>
     <script>
 if(window.AscDesktopEditor){window.desktop=window.AscDesktopEditor;desktop.features={};window.native_message_cmd=[];window.on_native_message=function(cmd,param){if(/window:features/.test(cmd)){var obj=JSON.parse(param);if(obj.singlewindow!==undefined){desktop.features.singlewindow=obj.singlewindow}}else window.native_message_cmd[cmd]=param};if(!!window.RendererProcessVariable){const theme=desktop.theme=window.RendererProcessVariable.theme;const map_themes=window.RendererProcessVariable.localthemes;if(theme){window.uitheme={id:theme.id,type:theme.type};if(/dark|light/.test(theme.system)){window.uitheme.is_system_theme_dark=function(){return theme.system=="dark"}}if(map_themes&&map_themes[theme.id]){window.uitheme.colors=map_themes[theme.id].colors}}if(window.RendererProcessVariable.rtl!==undefined){window.nativeprocvars={rtl:window.RendererProcessVariable.rtl===true||window.RendererProcessVariable.rtl=="yes"||window.RendererProcessVariable.rtl=="true"}}}if(!params||!params["internal"]){!window.features&&(window.features={});window.features.framesize={width:window.innerWidth,height:window.innerHeight};window.desktop.execCommand("webapps:entry",window.features&&JSON.stringify(window.features)||"")}}
 </script>
@@ -525,10 +525,10 @@ var checkLocalStorage=function(){try{localStorage.setItem("test",1);localStorage
             (document.write('<script src="../../common/main/lib/util/fix-ie-compat.js"><\/script>'),
             document.write('<script src="../../../../sdkjs/vendor/string.js"><\/script>'));
     </script>
-    <script src="../../../vendor/requirejs/require.js"></script>
+    <script src="https://office-editor.ziziyi.com/v9.3.0.24-1/web-apps/vendor/requirejs/require.js"></script>
     <script>
         isIEBrowser === true ? require(['ie/app']) : require(['app']);
     </script>
-    <link rel="stylesheet" href="../../../apps/spreadsheeteditor/main/resources/css/app.css" media="print" onload="this.media='all'">    
+    <link rel="stylesheet" href="https://office-editor.ziziyi.com/v9.3.0.24-1/web-apps/apps/spreadsheeteditor/main/resources/css/app.css" media="print" onload="this.media='all'">    
 </body>
 </html>

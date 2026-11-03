@@ -1,10 +1,11 @@
 /**
  * Web Worker: Engine Konversi Dokumen X2T WebAssembly
  * Lokasi: utils/editor/x2t.worker.ts
- * Diperbarui: 03 November 2026 (09:25 WIB)
+ * Diperbarui: 03 November 2026 (10:20 WIB)
  * Penulis: RAZ Enterprise Core Team
  * Deskripsi: Worker thread untuk eksekusi kompilasi & konversi dokumen (.docx, .xlsx, .pptx)
- * menggunakan WebAssembly x2t. Dioptimalkan dengan resolusi base URL yang kebal terhadap Blob URL Worker.
+ * menggunakan WebAssembly x2t. Dioptimalkan dengan fetch & Blob URL execution sehingga
+ * 100% kebal terhadap kompresi Brotli/Gzip dari web server (mencegah syntax error token).
  */
 
 /// <reference lib="webworker" />
@@ -70,8 +71,29 @@ async function initX2t(customBaseUrl?: string): Promise<void> {
     __filename: baseUrl,
   });
 
-  // Eksekusi skrip engine x2t di Worker
-  importScripts(scriptUrl);
+  // Eksekusi skrip engine x2t di Worker:
+  // Ambil teks skrip via fetch() agar didekompresi secara otomatis oleh HTTP stack browser (Brotli/Gzip)
+  // lalu eksekusi melalui in-memory Blob URL sehingga kebal 100% dari token biner terkompresi
+  try {
+    const res = await fetch(scriptUrl);
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status} saat memuat x2t.js dari ${scriptUrl}`);
+    }
+    const scriptText = await res.text();
+    const blob = new Blob([scriptText], { type: "application/javascript" });
+    const blobUrl = URL.createObjectURL(blob);
+    try {
+      importScripts(blobUrl);
+    } catch (importErr) {
+      console.warn("[x2t.worker] importScripts blob failed, fallback to global eval:", importErr);
+      (0, eval)(scriptText);
+    } finally {
+      URL.revokeObjectURL(blobUrl);
+    }
+  } catch (fetchErr) {
+    console.warn("[x2t.worker] fetch x2t.js failed, fallback to direct importScripts:", fetchErr);
+    importScripts(scriptUrl);
+  }
 
   x2t = (self as any).Module;
 

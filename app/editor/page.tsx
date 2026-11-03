@@ -49,7 +49,7 @@ export default function Page() {
   useLayoutEffect(() => {
     if (!hasHydrated) return;
 
-    const apiUrl = APP_ROOT + API_JS;
+    const apiUrl = `${APP_ROOT}${API_JS}?v=1.1.3`;
     const searchParams = new URLSearchParams(window.location.search);
 
     const fileId = searchParams.get("fileId");
