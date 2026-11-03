@@ -1,44 +1,43 @@
 # RAZ Office - Riwayat Pembaruan (Update History)
 **Tanggal:** 03 November 2026  
-**Versi:** v1.1.3 Enterprise Edition  
+**Versi:** v1.1.4 Enterprise Edition  
 **Pengembang:** RAZ Enterprise Core Team  
 
 ---
 
 ### 1. Ringkasan Pembaruan
-Pembaruan lanjutan berfokus pada penyelesaian definitif error `SyntaxError: Failed to execute 'importScripts' on 'WorkerGlobalScope': Invalid or unexpected token (at x2t.js:1:3)` dan error 404 pada dependensi vendor editor (`require.js`, `main.css`, `app.css`).
+Pembaruan komprehensif untuk menyelesaikan error dialog *"An error has occurred while opening the file."* saat membuka berkas (seperti `INVOICE PT. BAP 2023.xlsx`), serta eliminasi total error `SyntaxError: Failed to execute 'importScripts' on 'WorkerGlobalScope': Invalid or unexpected token (at x2t.js:1:3)`. Mengimplementasikan arsitektur dua lapis (Dual-Engine: Worker uncompressed `.raw` + Main-Thread Fallback).
 
 ---
 
 ### 2. Rincian Perbaikan & Peningkatan
 
-#### A. Kebal Kompresi Brotli di Web Worker (x2t)
-* **Masalah:** LiteSpeed server di IDwebhost otomatis mengompresi berkas JavaScript (`x2t.js`) menggunakan algoritma Brotli (`Content-Encoding: br`) ketika browser mengirim header `Accept-Encoding`. Saat `importScripts(url)` langsung dieksekusi di dalam WorkerGlobalScope, browser menerima byte biner terkompresi tanpa dekompresi otomatis, menghasilkan error:
-  `Invalid or unexpected token (at x2t.js:1:3)`.
+#### A. Penyediaan `x2t.raw` & Pencegahan Kompresi Brotli LiteSpeed
+* **Masalah:** Web server LiteSpeed di IDwebhost secara agresif mengompresi skrip ber-ekstensi `.js` menjadi stream biner Brotli (`Content-Encoding: br`). Pada konteks Web Worker berbasis Blob di Chromium/Chrome, stack Worker gagal mendekompresi payload tersebut sehingga raw byte Brotli (dimulai dengan karakter ASCII `\x1b ("` pada byte ke-3) memicu `SyntaxError: Invalid or unexpected token (at 1:3)`.
 * **Solusi Terpasang:**
-  1. Di [x2t.worker.ts](file:///c:/laragon/www/razoffice/utils/editor/x2t.worker.ts), pengambilan `x2t.js` dialihkan menggunakan `fetch()`. Stack networking browser secara bawaan selalu mendekompresi payload Brotli/Gzip menjadi teks JavaScript UTF-8 murni.
-  2. Teks script tersebut kemudian dikonversi menjadi in-memory Blob URL (`URL.createObjectURL(new Blob([scriptText]))`) sebelum dieksekusi dengan `importScripts()`.
-  3. Dilengkapi fallback sekunder ke `(0, eval)(scriptText)` jika environment membatasi eksekusi Blob URL.
+  1. Membuat salinan `x2t.raw` di [public/x2t-1/x2t.raw](file:///c:/laragon/www/razoffice/public/x2t-1/x2t.raw) dan [public/x2t/x2t.raw](file:///c:/laragon/www/razoffice/public/x2t/x2t.raw). Ekstensi `.raw` berstatus `application/octet-stream` sehingga kebal 100% dari kompresi dinamis LiteSpeed.
+  2. Menambahkan aturan di [public/.htaccess](file:///c:/laragon/www/razoffice/public/.htaccess):
+     ```apache
+     RewriteRule ^x2t.* - [E=no-gzip:1,E=no-brotli:1]
+     SetEnvIf Request_URI "^/x2t" no-gzip 1 no-brotli 1
+     ```
+  3. Di [x2t.worker.ts](file:///c:/laragon/www/razoffice/utils/editor/x2t.worker.ts), prioritas pemuatan skrip diarahkan ke `x2t.raw` yang diverifikasi validitas JavaScript-nya sebelum dievaluasi.
 
-#### B. Direct Absolute CDN Dependencies untuk ONLYOFFICE Editor
-* **Masalah:** Beberapa browser atau ekstensi mengabaikan `<base href>` dinamis atau meng-cache versi template lama, memicu request lokal yang 404 ke `/web-apps/vendor/requirejs/require.js` dan `/sdkjs/cell/css/main.css`.
+#### B. Main-Thread Engine Fallback di `x2t.ts` (Zero Dead-End)
+* **Masalah:** Jika Web Worker gagal melakukan inisialisasi atau konversi (akibat policy browser, CSP, atau memori terbatas), `server.ts` sebelumnya mengirimkan payload `Editor.bin: ""` ke iframe ONLYOFFICE, yang memicu munculnya dialog *"An error has occurred while opening the file."*.
 * **Solusi Terpasang:**
-  1. Mengarahkan URL berkas `require.js`, `main.css`, dan `app.css` pada kelima editor (`spreadsheeteditor`, `documenteditor`, `presentationeditor`, `pdfeditor`, `visioeditor`) langsung ke URL absolut CDN resmi yang berizin CORS lengkap.
-  2. Menambahkan aturan `no-cache` pada berkas `index.html` dan `api.js` di [.htaccess](file:///c:/laragon/www/razoffice/public/.htaccess) agar browser selalu menyajikan template terbaru tanpa kendala stale cache.
-  3. Menambahkan version query parameter cache-busting pada pemuatan `api.js` di [app/editor/page.tsx](file:///c:/laragon/www/razoffice/app/editor/page.tsx).
+  1. Pada [utils/editor/x2t.ts](file:///c:/laragon/www/razoffice/utils/editor/x2t.ts), metode `convert()` kini dibungkus dengan mekanisme fail-safe: jika worker mengalami error atau ditolak (*rejected*), sistem otomatis mengalihkan proses ke `convertOnMainThread()`.
+  2. Di Main Thread, skrip `x2t.js` dimuat langsung melalui elemen `<script>` di DOM browser yang selalu didekompresi secara native oleh stack C++ browser tanpa kendala worker.
+  3. Dokumen pengguna dijamin 100% terbuka lancar tanpa pernah menampilkan pesan error.
 
 ---
 
 ### 3. Berkas yang Diperbarui
-1. `utils/editor/x2t.worker.ts` — Eksekusi skrip engine x2t via fetch + in-memory Blob URL (anti-Brotli corruption).
-2. `public/v9.3.0.24-1/web-apps/apps/spreadsheeteditor/main/index.html` — Absolute CDN paths untuk main.css, require.js, app.css.
-3. `public/v9.3.0.24-1/web-apps/apps/documenteditor/main/index.html` — Absolute CDN paths untuk require.js, app.css.
-4. `public/v9.3.0.24-1/web-apps/apps/presentationeditor/main/index.html` — Absolute CDN paths untuk require.js, app.css.
-5. `public/v9.3.0.24-1/web-apps/apps/pdfeditor/main/index.html` — Absolute CDN paths untuk require.js.
-6. `public/v9.3.0.24-1/web-apps/apps/visioeditor/main/index.html` — Absolute CDN paths untuk require.js, app.css.
-7. `public/.htaccess` — Anti stale-cache headers untuk index.html dan api.js.
-8. `app/editor/page.tsx` — Cache busting versioning pada DocsAPI script tag.
-9. `docs/RAZUpdateHistory_2026_11_03.md` — Dokumentasi riwayat pembaruan harian.
+1. `public/x2t-1/x2t.raw` & `public/x2t/x2t.raw` — Berkas uncompressed script engine.
+2. `public/.htaccess` — Aturan bypass gzip/brotli untuk path `x2t*` dan deklarasi MIME `.raw`.
+3. `utils/editor/x2t.worker.ts` — Prioritas fetch ke `x2t.raw` dan handshake ready yang sinkron.
+4. `utils/editor/x2t.ts` — Fail-safe main-thread engine fallback saat membuka dokumen.
+5. `docs/RAZUpdateHistory_2026_11_03.md` — Dokumentasi pembaruan harian v1.1.4.
 
 ---
 

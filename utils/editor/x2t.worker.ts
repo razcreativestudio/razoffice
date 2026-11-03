@@ -52,10 +52,11 @@ async function initX2t(customBaseUrl?: string): Promise<void> {
   if (x2t) return;
 
   const baseUrl = resolveBaseUrl(customBaseUrl);
+  const rawScriptUrl = baseUrl + "x2t.raw";
   const scriptUrl = baseUrl + "x2t.js";
   const wasmUrl = baseUrl + "x2t.wasm";
 
-  console.log("[x2t.worker] Initializing with scriptUrl:", scriptUrl);
+  console.log("[x2t.worker] Initializing with baseUrl:", baseUrl);
 
   // Siapkan objek Module dan hook locateFile sebelum load skrip WASM
   (self as any).Module = (self as any).Module || {};
@@ -72,26 +73,40 @@ async function initX2t(customBaseUrl?: string): Promise<void> {
   });
 
   // Eksekusi skrip engine x2t di Worker:
-  // Ambil teks skrip via fetch() agar didekompresi secara otomatis oleh HTTP stack browser (Brotli/Gzip)
-  // lalu eksekusi melalui in-memory Blob URL sehingga kebal 100% dari token biner terkompresi
+  // 1. Prioritaskan fetch x2t.raw (100% bebas dari kompresi Brotli dinamis web server)
+  // 2. Fallback fetch x2t.js jika x2t.raw tidak tersedia
+  // 3. Fallback importScripts standar
+  let scriptLoaded = false;
+
   try {
-    const res = await fetch(scriptUrl);
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status} saat memuat x2t.js dari ${scriptUrl}`);
+    const rawRes = await fetch(rawScriptUrl);
+    if (rawRes.ok) {
+      const scriptText = await rawRes.text();
+      if (scriptText && (scriptText.includes("Module") || scriptText.includes("shell.js"))) {
+        (0, eval)(scriptText);
+        scriptLoaded = true;
+      }
     }
-    const scriptText = await res.text();
-    const blob = new Blob([scriptText], { type: "application/javascript" });
-    const blobUrl = URL.createObjectURL(blob);
+  } catch (rawErr) {
+    console.warn("[x2t.worker] fetch x2t.raw failed, trying x2t.js:", rawErr);
+  }
+
+  if (!scriptLoaded) {
     try {
-      importScripts(blobUrl);
-    } catch (importErr) {
-      console.warn("[x2t.worker] importScripts blob failed, fallback to global eval:", importErr);
-      (0, eval)(scriptText);
-    } finally {
-      URL.revokeObjectURL(blobUrl);
+      const jsRes = await fetch(scriptUrl);
+      if (jsRes.ok) {
+        const scriptText = await jsRes.text();
+        if (scriptText && (scriptText.includes("Module") || scriptText.includes("shell.js"))) {
+          (0, eval)(scriptText);
+          scriptLoaded = true;
+        }
+      }
+    } catch (jsErr) {
+      console.warn("[x2t.worker] fetch x2t.js failed, fallback to importScripts:", jsErr);
     }
-  } catch (fetchErr) {
-    console.warn("[x2t.worker] fetch x2t.js failed, fallback to direct importScripts:", fetchErr);
+  }
+
+  if (!scriptLoaded) {
     importScripts(scriptUrl);
   }
 
@@ -371,5 +386,11 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   }
 };
 
-// Beritahu main thread bahwa worker telah siap
-self.postMessage({ type: "ready" });
+// Beritahu main thread saat runtime selesai inisialisasi
+ensureInit()
+  .then(() => {
+    self.postMessage({ type: "ready" });
+  })
+  .catch((err) => {
+    console.error("[x2t.worker] Auto-init failed:", err);
+  });

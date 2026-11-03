@@ -12,6 +12,9 @@ DirectoryIndex index.html index.htm
   RewriteEngine On
   RewriteBase /
 
+  # Nonaktifkan kompresi dinamis LiteSpeed untuk aset engine x2t agar tidak merusak eksekusi Web Worker
+  RewriteRule ^x2t.* - [E=no-gzip:1,E=no-brotli:1]
+
   # Jika file atau folder memang ada di server, langsung sajikan
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
@@ -25,6 +28,11 @@ DirectoryIndex index.html index.htm
   ErrorDocument 404 /404/index.html
 </IfModule>
 
+# Cegah kompresi dinamis server untuk folder x2t
+<IfModule mod_env.c>
+  SetEnvIf Request_URI "^/x2t" no-gzip 1 no-brotli 1
+</IfModule>
+
 # ==============================================================================
 # MIME Types untuk WebAssembly & Aset Modern
 # ==============================================================================
@@ -33,6 +41,7 @@ DirectoryIndex index.html index.htm
   AddType application/json .json
   AddType image/svg+xml .svg .svgz
   AddEncoding gzip .svgz
+  AddType application/octet-stream .raw
 </IfModule>
 
 # ==============================================================================
