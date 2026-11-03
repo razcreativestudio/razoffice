@@ -1,0 +1,58 @@
+# ==============================================================================
+# Proyek: RAZ Office
+# Pembaruan Terakhir: 15 Oktober 2026
+# Deskripsi: CI/CD Pipeline Otomatis Deploy ke Shared Hosting (cPanel / IDwebhost) via FTPS/FTP
+# Standar: RAZ Enterprise Workflow
+# ==============================================================================
+
+name: RAZ Deploy to IDwebhost
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Memungkinkan kamu menekan tombol "Run workflow" secara manual dari tab Actions di GitHub
+
+concurrency:
+  group: deploy-idwebhost
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: 🚀 Build & Deploy to IDwebhost
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: ⚙️ Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: 🛠️ Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Compile & Build Static Site (Next.js)
+        run: pnpm run build
+
+      - name: 📤 Deploy out/ to IDwebhost via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR || 'public_html/' }}
+          local-dir: ./out/
+          dangerous-clean-slate: false
