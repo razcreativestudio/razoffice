@@ -25,7 +25,7 @@ async function deploy() {
 
   const client = new ftp.Client();
   client.ftp.verbose = true;
-  client.ftp.timeout = 60000;
+  client.ftp.timeout = 300000; // 5 menit per socket/file transfer agar file besar seperti WASM tidak timeout
 
   try {
     console.log(`🔌 Menghubungkan ke FTP Server: ${host}...`);
