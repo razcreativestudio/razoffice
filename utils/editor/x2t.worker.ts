@@ -1,78 +1,123 @@
+/**
+ * Web Worker: Engine Konversi Dokumen X2T WebAssembly
+ * Lokasi: utils/editor/x2t.worker.ts
+ * Diperbarui: 03 November 2026 (09:25 WIB)
+ * Penulis: RAZ Enterprise Core Team
+ * Deskripsi: Worker thread untuk eksekusi kompilasi & konversi dokumen (.docx, .xlsx, .pptx)
+ * menggunakan WebAssembly x2t. Dioptimalkan dengan resolusi base URL yang kebal terhadap Blob URL Worker.
+ */
+
 /// <reference lib="webworker" />
 
 import { AvsFileType, X2tConvertParams, X2tConvertResult } from "./types";
 
-/**
- * X2T Converter Web Worker
- *
- * This worker handles CPU-intensive document conversion operations
- * off the main thread to prevent UI blocking.
- */
-
 /* eslint-disable no-restricted-globals */
 
-// Base URL for x2t files - hardcoded since blob URL workers can't determine origin
-const BASE_URL = self.location.origin + "/x2t-1/";
-// const BASE_URL = self.location.origin + "/wasm/x2t/";
+// Resolusi base URL yang aman dari konteks Blob URL Web Worker (Next.js / Turbopack)
+function resolveBaseUrl(customBaseUrl?: string): string {
+  if (customBaseUrl && typeof customBaseUrl === "string" && customBaseUrl.startsWith("http")) {
+    return customBaseUrl.endsWith("/") ? customBaseUrl : customBaseUrl + "/";
+  }
+
+  // Jika Turbopack menyuntikkan lokasi worker asal
+  const turboLoc = (self as any).TURBOPACK_WORKER_LOCATION;
+  if (typeof turboLoc === "string" && turboLoc.startsWith("http")) {
+    return turboLoc.replace(/\/+$/, "") + "/x2t-1/";
+  }
+
+  // Ekstrak protokol + host dari location.href (menangani blob:https://domain.com/uuid)
+  const href = self.location?.href || "";
+  const match = href.match(/https?:\/\/[^\/]+/i);
+  if (match) {
+    return match[0] + "/x2t-1/";
+  }
+
+  // Fallback origin jika bukan blob atau null
+  const origin = self.location?.origin;
+  if (origin && origin !== "null" && !origin.startsWith("blob:")) {
+    return origin.replace(/\/+$/, "") + "/x2t-1/";
+  }
+
+  return "/x2t-1/";
+}
 
 let x2t: any = null;
 let initPromise: Promise<void> | null = null;
 
 /**
- * Initialize x2t module in Worker context
+ * Inisialisasi engine x2t WASM di konteks Web Worker
  */
-async function initX2t(): Promise<void> {
+async function initX2t(customBaseUrl?: string): Promise<void> {
   if (x2t) return;
-  // self.wasmBinaryFile = BASE_URL + "x2t.wasm";
 
-  const scriptUrl = BASE_URL + "x2t.js";
+  const baseUrl = resolveBaseUrl(customBaseUrl);
+  const scriptUrl = baseUrl + "x2t.js";
+  const wasmUrl = baseUrl + "x2t.wasm";
 
-  // fix .wasm loading
+  console.log("[x2t.worker] Initializing with scriptUrl:", scriptUrl);
+
+  // Siapkan objek Module dan hook locateFile sebelum load skrip WASM
+  (self as any).Module = (self as any).Module || {};
+  (self as any).Module.locateFile = function (path: string, prefix: string) {
+    if (path.endsWith(".wasm") || path === "x2t.wasm") {
+      return wasmUrl;
+    }
+    return prefix + path;
+  };
+
+  // Konfigurasi path script root untuk emscripten
   Object.assign(self, {
-    __filename: BASE_URL,
+    __filename: baseUrl,
   });
 
-  // Load x2t script in Worker context
+  // Eksekusi skrip engine x2t di Worker
   importScripts(scriptUrl);
 
   x2t = (self as any).Module;
 
-  // Wait for WASM runtime initialization
+  // Tunggu kesiapan runtime WASM
   await new Promise<void>((resolve) => {
-    x2t.onRuntimeInitialized = () => resolve();
+    if (x2t.calledRun) {
+      resolve();
+    } else {
+      const prevOnInit = x2t.onRuntimeInitialized;
+      x2t.onRuntimeInitialized = () => {
+        if (prevOnInit) prevOnInit();
+        resolve();
+      };
+    }
   });
 
-  // Create working directories
+  // Buat folder kerja virtual memori
   try {
     x2t.FS.mkdir("/working");
     x2t.FS.mkdir("/working/media");
     x2t.FS.mkdir("/working/fonts");
     x2t.FS.mkdir("/working/themes");
   } catch (err) {
-    // Directories may already exist
-    console.error("[x2t.worker] mkdir error:", err);
+    // Abaikan jika direktori sudah ada
   }
 
   console.log("[x2t.worker] Initialized successfully");
 }
 
 /**
- * Ensure x2t is initialized before conversion
+ * Memastikan x2t siap sebelum eksekusi konversi dokumen
  */
-async function ensureInit(): Promise<void> {
+async function ensureInit(customBaseUrl?: string): Promise<void> {
   if (!initPromise) {
-    initPromise = initX2t();
+    initPromise = initX2t(customBaseUrl);
   }
   return initPromise;
 }
 
-// Auto-initialize on worker creation
+// Inisialisasi otomatis saat worker dibuat
 ensureInit().catch((err) => {
   console.error("[x2t.worker] Auto-init failed:", err);
 });
 
 /**
- * Clean up temporary files after conversion
+ * Bersihkan file temporary setelah selesai konversi
  */
 function cleanupFiles(files: string[]): void {
   for (const file of files) {
@@ -99,7 +144,7 @@ function cleanMedia() {
 }
 
 /**
- * Read media files from the working directory
+ * Baca file media yang dihasilkan dari direktori virtual
  */
 function readMedia(): { [key: string]: Uint8Array<ArrayBuffer> } {
   const media: { [key: string]: Uint8Array<ArrayBuffer> } = {};
@@ -170,7 +215,7 @@ ${content}
 }
 
 /**
- * Convert document from one format to another
+ * Konversi dokumen antar format dokumen Office
  */
 async function convert({
   data,
@@ -227,7 +272,7 @@ async function convert({
     console.error("ccall", e);
   }
 
-  // Read output file
+  // Baca hasil output file
   let output: Uint8Array<ArrayBuffer> | null = null;
   try {
     output = x2t.FS.readFile(toPath);
@@ -235,10 +280,10 @@ async function convert({
     console.error(e);
   }
 
-  // Read media files
+  // Baca aset media pendukung
   const outputMedia = readMedia();
 
-  // Cleanup temporary files
+  // Bersihkan file sementara
   setTimeout(() => {
     cleanupFiles(files);
   });
@@ -246,27 +291,33 @@ async function convert({
   return { output, media: outputMedia };
 }
 
-// Message types
+// Tipe pesan komunikasi antar thread
 interface WorkerMessage {
   id?: number;
-  type: "convert";
+  type: "init" | "convert";
   payload?: any;
 }
 
 /**
- * Handle incoming messages from main thread
+ * Handler pesan masuk dari main thread
  */
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   const { id, type, payload } = event.data;
 
   try {
     switch (type) {
+      case "init": {
+        await ensureInit(payload?.baseUrl);
+        self.postMessage({ id, type: "init:done" });
+        break;
+      }
+
       case "convert": {
-        // Ensure x2t is initialized before conversion
-        await ensureInit();
+        // Pastikan x2t telah siap dengan baseUrl jika disediakan
+        await ensureInit(payload?.baseUrl);
         const result = await convert(payload);
 
-        // Use Transferable objects for zero-copy transfer
+        // Gunakan Transferable objects untuk performa memori instan
         const transferables: Transferable[] = [];
         if (result.output) {
           transferables.push(result.output.buffer);
@@ -298,5 +349,5 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   }
 };
 
-// Signal that worker is ready
+// Beritahu main thread bahwa worker telah siap
 self.postMessage({ type: "ready" });
